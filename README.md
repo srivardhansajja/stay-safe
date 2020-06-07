@@ -6,7 +6,7 @@ Everyone knows they should notify a friend or family member about their trip pla
 
 ## Motivation
 
-We are motivated to create an application that will protect the safety others. 'Stay Safe' allows the user to request help when they may be otherwise incapable of doing so.
+We are motivated to create an application that will protect the safety of others. 'Stay Safe' allows the user to request help when they may be otherwise incapable of doing so.
 
 ## Risks to Project Completion
 
@@ -34,7 +34,7 @@ We use [Scrum](https://www.scrum.org/) as our agile software development method.
 
 ## Project Tracking Software
 
-We use [Trello](https://www.trello.com/) to organize our workflow and [Github](https://www.github.com/) for version control.
+We use [Trello](https://www.trello.com/) to organize our workflow and [GitHub](https://www.github.com/) for version control.
 
 ## Team Members
 * Thomas Dolan
