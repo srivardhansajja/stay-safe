@@ -1,0 +1,1 @@
+# apps/accounts/urls.py

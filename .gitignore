@@ -5,3 +5,5 @@ __pycache__/
 venv/
 *.sqlite3
 .idea/
+Pipfile
+Pipfile.lock
