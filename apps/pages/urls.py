@@ -5,5 +5,5 @@ from . import views
 
 # Link 'pages' app urls to views
 urlpatterns = [
-    path('', views.HomePageView.as_view(), name='homepage'),
+    path('', views.HomePageView.as_view(), name='home'),
 ]
