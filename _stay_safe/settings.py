@@ -131,7 +131,7 @@ AUTH_USER_MODEL = 'accounts.CustomAccount'
 
 # Redirect login and logout to our homepage
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Sendgrid email settings for password reset, warnings, etc.

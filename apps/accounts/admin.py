@@ -10,7 +10,7 @@ class CustomAdminAccount(UserAdmin):
     """Custom admin account fields"""
     add_form = CustomCreateForm
     form = CustomChangeForm
-    list_display = ['email', 'username']
+    list_display = ['email', 'username', 'emergency_email']
     model = CustomAccount
 
 

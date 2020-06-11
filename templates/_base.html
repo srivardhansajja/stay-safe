@@ -19,10 +19,17 @@
 
     <body>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb- ">
-            <a class="navbar-brand" href="{% url 'homepage' %}">
+            <a class="navbar-brand" href="{% url 'home' %}">
                 Stay Safe
             </a>
-   
+
+    {% if user.is_authenticated %}
+        welcome {{ user.username }}
+        <p><a href="{% url 'logout' %}">Logout</a></p>   
+    {% else %}
+        <p>You are not logged in</p>
+    {% endif %}
+
     <!-- Insert block 'content' -->
     {% block content %}
     {% endblock %}

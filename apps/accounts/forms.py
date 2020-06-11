@@ -5,13 +5,15 @@ from .models import CustomAccount
 
 # Create custom account creation forms
 class CustomCreateForm(UserCreationForm):
-    """TODO: Set custom fields"""
-    model = CustomAccount
-    pass
+    """Account creation fields"""
+    class Meta(UserCreationForm.Meta):
+        model = CustomAccount
+        fields = ('username', 'email')
 
 
 # Create custom account change forms
 class CustomChangeForm(UserChangeForm):
-    """TODO: Set custom fields"""
-    model = CustomAccount
-    pass
+    """Admin access"""
+    class Meta:
+        model = CustomAccount
+        fields = ('username', 'email')
