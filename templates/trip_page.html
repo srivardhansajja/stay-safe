@@ -1,0 +1,10 @@
+<!-- templates/trip_page.html -->
+
+{% extends '_base.html' %}
+
+{% block content %}
+
+{% for trip in object_list %}
+    <p>{{ trip.trip_name }}</p>
+{% endfor %}
+{% endblock %}
