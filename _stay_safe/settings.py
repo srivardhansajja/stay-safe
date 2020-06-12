@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # Local Apps
     'apps.accounts',
     'apps.pages',
+
+    # Third Party Apps
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +135,10 @@ AUTH_USER_MODEL = 'accounts.CustomAccount'
 # Redirect login and logout to our homepage
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+# Select the bootstrap4 template pack for crispy-forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # Sendgrid email settings for password reset, warnings, etc.
