@@ -7,4 +7,5 @@ from . import views
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
     path('trips/', views.TripPageView.as_view(), name='trip_list'),
+    path('trips/add/', views.TripCreateView.as_view(), name='trip_create'),
 ]
