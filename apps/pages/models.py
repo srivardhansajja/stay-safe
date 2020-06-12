@@ -5,9 +5,8 @@ from apps.accounts.models import CustomAccount
 
 class Trip(models.Model):
     trip_owner = models.ForeignKey(CustomAccount,
-                        on_delete=models.CASCADE,
-                        related_name='trips'
-    )
+                                   on_delete=models.CASCADE,
+                                   related_name='trips')
     trip_location = models.CharField(max_length=30)
     trip_name = models.CharField(max_length=30)
     trip_start = models.DateTimeField()
