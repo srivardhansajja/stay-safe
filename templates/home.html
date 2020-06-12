@@ -6,9 +6,28 @@
 {% endblock %}
 
 {% block content %}
+
+    <!-- User is logged on -->
     {% if user.is_authenticated %}
-        Welcome {{ user.username }}
-        <p><a href="{% url 'logout' %}">Logout</a></p>   
+    <h1>Welcome {{ user.username }}!</h1>
+        
+        <!-- Create a trip -->
+        <form id="trip_options" class="form-inline ml-auto">
+            <div class="col-md-4 center-block">
+            <a href="{% url 'trip_create' %}" class="btn btn-outline-secondary btn-md mr-1" \
+                role="button" aria-pressed="true">
+                Create a Trip
+            </a>
+
+            <!-- View a trip -->
+            <a href="{% url 'trip_list' %}" class="btn btn-outline-secondary btn-md" \
+                role="button" aria-pressed="true">
+                View Trips
+            </a> 
+            </div>
+        </form>
+
+    <!-- User is logged out -->
     {% else %}
         <p>You are not logged in</p>
     {% endif %}
