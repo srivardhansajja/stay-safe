@@ -1,0 +1,14 @@
+<!-- templates/trip_create.html -->
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %} 
+
+<!-- Form for creating new trips -->
+{% block content %}
+    <h1>Create a Trip</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <input class="btn btn-success ml-1" type="submit" value="Create Trip">
+    </form>
+{% endblock %}    
