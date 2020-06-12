@@ -27,7 +27,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span> 
             </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">i
+            <div class="collapse navbar-collapse" id="navbarCollapse">
 
                 <!-- User is logged in: Logout or change password -->
                 {% if user.is_authenticated %}
@@ -41,6 +41,10 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                                 <a class="dropdown-item" href="{% url 'logout' %}">
                                     Logout
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'password_reset' %}">
+                                    Change Password
                                 </a>
                             </div> 
                         </li> 
