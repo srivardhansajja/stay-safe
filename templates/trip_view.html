@@ -1,0 +1,32 @@
+<!-- templates/trip_page.html -->
+{% extends '_base.html' %}
+
+{% block content %}
+
+    <br><h1>Scheduled Trips</h1><br>
+    
+    <!-- Trip table -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Trip</th>
+                <th scope="col">Location</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+            </tr>
+        </thead>
+        {% for trip in object_list %}
+            <tbody>
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ trip.trip_name }}</td>
+                    <td>{{ trip.trip_location }}</td>
+                    <td>{{ trip.trip_start }}</td>
+                    <td>{{ trip.trip_end }}</td>
+                </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+
+{% endblock %}
