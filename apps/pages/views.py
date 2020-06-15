@@ -2,7 +2,7 @@
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from .form import TripCreateForm
+from .forms import TripCreateForm
 from .models import Trip
 
 
@@ -20,7 +20,6 @@ class TripPageView(ListView):
     def get_queryset(self):
         return Trip.objects.filter(trip_owner=self.request.user)
 
-
 # Render the page to Create Trips
 class TripCreateView(CreateView):
     model = Trip
@@ -28,5 +27,6 @@ class TripCreateView(CreateView):
     form_class = TripCreateForm
     success_url = reverse_lazy('home')
 
-    def get_query_set(self):
-        return Trip.objects.filter(user=self.request.user)
+    def form_valid(self, form):
+        form.instance.trip_owner = self.request.user
+        return super().form_valid(form)
