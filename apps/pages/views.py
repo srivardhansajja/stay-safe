@@ -17,9 +17,8 @@ class TripPageView(ListView):
     template_name = 'trip_view.html'
     fields = '__all__'
 
-    def get_query_set(self):
-        return Trip.objects.filter(user=self.request.user)
-
+    def get_queryset(self):
+        return Trip.objects.filter(trip_owner=self.request.user)
 
 # Render the page to Create Trips
 class TripCreateView(CreateView):
