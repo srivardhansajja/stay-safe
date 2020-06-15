@@ -16,7 +16,7 @@
                 <th scope="col">End Date</th>
             </tr>
         </thead>
-        {% for trip in user.trips.all %}
+        {% for trip in object_list %}
             <tbody>
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
