@@ -1,21 +1,33 @@
 # apps/pages/forms.py
 from django import forms
-from django.forms import ModelForm
 from .models import Trip
 
 
-# Access the built-in DateInput widget
-class DateInput(forms.DateInput):
-    input_type = 'date'
-
-
 # Form used to create trips
-class TripCreateForm(ModelForm):
+class TripCreateForm(forms.ModelForm):
     class Meta:
         model = Trip
-        fields = ['trip_location', 'trip_name', 'trip_start', 'trip_end']
-        widgets = {
-            'trip_start': DateInput(),
-            'trip_end': DateInput(),
-            # 'trip_owner': forms.widgets.Select(attrs={'readonly': True, 'disabled': True})
-        }
+        fields = [
+            'trip_location',
+            'trip_name',
+            'trip_start',
+            'trip_end',
+        ]
+
+    trip_start = forms.DateTimeField(
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M',
+            attrs={'type': 'datetime-local'}
+        )
+    )
+
+    trip_end = forms.DateTimeField(
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M',
+            attrs={'type': 'datetime-local'}
+        )
+    )
