@@ -59,14 +59,14 @@ class TestPageStatusCodes(TestCase):
         '''
         Test: Home page access
         '''
-        response = self.client.get('/accounts/login/')
+        response = self.client.get('')
         self.assertEqual(response.status_code, 200)
 
     def test_signup_page_status_code(self):
         '''
         Test: Login page access
         '''
-        response = self.client.get('/accounts/login/')
+        response = self.client.get('/accounts/signup/')
         self.assertEqual(response.status_code, 200)
 
     def test_login_page_status_code(self):
