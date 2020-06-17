@@ -1,7 +1,6 @@
 # apps/pages/tests/test_models.py
 import datetime
-from django.test import TestCase, Client
-from django.contrib.auth import authenticate
+from django.test import TestCase
 from apps.pages.models import Trip
 from apps.accounts.models import CustomAccount
 
@@ -40,7 +39,7 @@ class TestTripModelFields(TestCase):
 
     def setUp(self):
         '''
-        Enable the test user and trip to be accessed by each test method
+        Enable the test user and test trip accessible by each test method
         '''
         self.test_user = CustomAccount.objects.get(username='TEST_USER_2')
         self.test_trip = Trip.objects.get(trip_owner=self.test_user)
@@ -50,7 +49,7 @@ class TestTripModelFields(TestCase):
 
     def test_number_of_trips(self):
         '''
-        Test: The number of trips created
+        Test: Number of trips created
         '''
         trip_count = len(Trip.objects.all())
         self.assertEqual(trip_count, 1)
@@ -63,19 +62,19 @@ class TestTripModelFields(TestCase):
 
     def test_trip_location(self):
         '''
-        Test: Trip location attribute
+        Test: Trip location
         '''
         self.assertEqual(self.test_trip.trip_location, 'TEST_TRIP_LOCATION')
 
     def test_trip_name(self):
         '''
-        Test: Trip name attribute
+        Test: Trip name
         '''
         self.assertEqual(self.test_trip.trip_name, 'TEST_TRIP_NAME')
 
     def test_trip_start(self):
         '''
-        Test: Trip start date attribute
+        Test: Trip start date
         '''
         start_date = datetime.datetime.strptime(
             '2020-06-15 10:00:00Z',
@@ -85,7 +84,7 @@ class TestTripModelFields(TestCase):
 
     def test_trip_end(self):
         '''
-        Test: Trip end date attribute
+        Test: Trip end date
         '''
         end_date = datetime.datetime.strptime(
             '2020-06-16 10:00:00Z',
