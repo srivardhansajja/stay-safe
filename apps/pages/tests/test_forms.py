@@ -11,14 +11,14 @@ class TestTripCreateFormFields(TestCase):
     @classmethod
     def setUpClass(cls):
         '''
-        Create the test form data
+        Create the test form data and test form instance
         '''
         cls.test_form_data = {
-                'trip_location': 'TEST_FORM_LOCATION',
-                'trip_name': 'TEST_FORM_TRIP_NAME',
-                'trip_start': '2020-06-15T10:00',
-                'trip_end': '2020-06-16T10:00',
-            }
+            'trip_location': 'TEST_FORM_LOCATION',
+            'trip_name': 'TEST_FORM_TRIP_NAME',
+            'trip_start': '2020-06-15T10:00',
+            'trip_end': '2020-06-16T10:00',
+        }
 
     @classmethod
     def tearDownClass(cls):
@@ -26,12 +26,9 @@ class TestTripCreateFormFields(TestCase):
 
     def setUp(self):
         '''
-        Create an instance of the form for each method and fill it with data
+        Create a test form
         '''
         self.test_form = TripCreateForm(data=self.test_form_data)
-
-    def tearDown(self):
-        pass
 
     def test_form_instance_and_bound(self):
         '''

@@ -16,36 +16,28 @@ class TestTripModelFields(TestCase):
         '''
         Create a user and an associated trip for testing purposes
         '''
-        # User object
-        test_user = CustomAccount.objects.create(
+        cls.test_user = CustomAccount.objects.create(
             username='TEST_USER_2',
             password='TEST_PASSWORD_2',
             email='TEST_EMAIL_2@EMAIL.COM',
             emergency_email='EMERGENCY_EMAIL_2@EMAIL.COM',
         )
-
-        # Trip object
         Trip.objects.create(
-            trip_owner=test_user,
+            trip_owner=cls.test_user,
             trip_location='TEST_TRIP_LOCATION',
             trip_name='TEST_TRIP_NAME',
             trip_start='2020-06-15 10:00:00Z',
             trip_end='2020-06-16 10:00:00Z',
         )
+        cls.test_trip = Trip.objects.get(trip_owner=cls.test_user)
 
     @classmethod
     def tearDownClass(cls):
-        pass
-
-    def setUp(self):
         '''
-        Enable the test user and test trip accessible by each test method
+        Remove the user and associated trip objects from the database
         '''
-        self.test_user = CustomAccount.objects.get(username='TEST_USER_2')
-        self.test_trip = Trip.objects.get(trip_owner=self.test_user)
-
-    def tearDown(self):
-        pass
+        cls.test_user.delete()
+        cls.test_trip.delete()
 
     def test_number_of_trips(self):
         '''
@@ -76,21 +68,21 @@ class TestTripModelFields(TestCase):
         '''
         Test: Trip start date
         '''
-        start_date = datetime.datetime.strptime(
+        start_date_expected = datetime.datetime.strptime(
             '2020-06-15 10:00:00Z',
             "%Y-%m-%d %H:%M:%S%z"
         )
-        self.assertEqual(self.test_trip.trip_start, start_date)
+        self.assertEqual(self.test_trip.trip_start, start_date_expected)
 
     def test_trip_end(self):
         '''
         Test: Trip end date
         '''
-        end_date = datetime.datetime.strptime(
+        end_date_expected = datetime.datetime.strptime(
             '2020-06-16 10:00:00Z',
             "%Y-%m-%d %H:%M:%S%z"
         )
-        self.assertEqual(self.test_trip.trip_end, end_date)
+        self.assertEqual(self.test_trip.trip_end, end_date_expected)
 
     def test_trip_str_method(self):
         '''

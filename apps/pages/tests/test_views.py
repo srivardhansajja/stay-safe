@@ -15,22 +15,23 @@ class TestPageStatusCodes(TestCase):
         '''
         Create a custom account object for testing
         '''
-        test_user = CustomAccount.objects.create(
-                username='TEST_USER',
-                password='TEST_PASSWORD',
-                email='TEST_EMAIL@EMAIL.COM',
-                emergency_email='EMERGENCY_EMAIL@EMAIL.COM',
-                is_active=True,
-            )
-        test_user.set_password(test_user.password)
-        test_user.save()
+        cls.test_user = CustomAccount.objects.create(
+            username='TEST_USER',
+            password='TEST_PASSWORD',
+            email='TEST_EMAIL@EMAIL.COM',
+            emergency_email='EMERGENCY_EMAIL@EMAIL.COM',
+            is_active=True,
+        )
+        cls.test_user.set_password(cls.test_user.password)
+        cls.test_user.save()
 
     @classmethod
     def tearDownClass(cls):
         '''
         Remove the custom account object from the database
         '''
-        CustomAccount.objects.all()[0].delete()
+        cls.test_user.delete()
+        #CustomAccount.objects.all()[0].delete()
 
     def setUp(self):
         '''
