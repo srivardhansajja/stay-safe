@@ -1,6 +1,21 @@
 /* static/css/_base.css */
 
 p {
+    font-family: 'PT Sans', sans-serif;
     color : black;
     font-size : 12px;
+}
+
+body {
+    font-family: 'PT Sans', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'PT Sans', sans-serif;
+    /* font-weight: bold; */
+}
+
+.navbar-title {
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bold;
 }

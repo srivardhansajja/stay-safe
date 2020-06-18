@@ -9,22 +9,47 @@
 
     <!-- User is logged on -->
     {% if user.is_authenticated %}
-    <h1>Welcome {{ user.username }}!</h1>
+    <br><h1>Welcome, {{ user.first_name }}!</h1><br>
         
         <!-- Create a trip -->
         <form id="trip_options" class="form-inline ml-auto">
-            <div class="col-md-4 center-block">
-            <a href="{% url 'trip_create' %}" class="btn btn-outline-secondary btn-md mr-1" \
-                role="button" aria-pressed="true">
-                Create a Trip
-            </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10">
+                    <a href="{% url 'trip_create' %}" class="btn btn-info btn-md mr-1" \
+                        role="button" aria-pressed="true">
+                        Create Trip
+                    </a>
+        
+                    <!-- View a trip -->
+                    <a href="{% url 'trip_list' %}" class="btn btn-outline-info btn-md mr-1" \
+                        role="button" aria-pressed="true">
+                        View Upcoming Trips
+                    </a> 
 
-            <!-- View a trip -->
-            <a href="{% url 'trip_list' %}" class="btn btn-outline-secondary btn-md" \
-                role="button" aria-pressed="true">
-                View Trips
-            </a> 
+                    <!-- View a trip -->
+                    <a href="{% url 'trip_list' %}" class="btn btn-outline-info btn-md mr-1" \
+                        role="button" aria-pressed="true">
+                        View All Trips
+                    </a> 
+        
+                    <!-- Set emergency contact details -->
+                    <a href="" class="btn btn-outline-secondary btn-md mr-1" \
+                        role="button" aria-pressed="true">
+                        Set emergency contacts
+                    </a> 
+        
+                </div>
+                <div class="col-md-2">
+                    <!-- Emergency! -->
+                    <a href="" class="btn btn btn-danger btn-md float-right pull-right mr-1" \
+                        role="button" aria-pressed="true">
+                        Emergency
+                    </a> 
+                </div>
             </div>
+        </div>
+            
         </form>
 
     <!-- User is logged out -->
