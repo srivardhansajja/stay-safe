@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+from datetime import datetime
 from .forms import TripCreateForm
 from .models import Trip
 
@@ -33,4 +34,11 @@ class TripCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.trip_owner = self.request.user
+
+        form.instance.trip_status = "Yet to start"
+        # if datetime.now() > form.instance.trip_start:
+        #     form.instance.trip_status = "In progress"
+        # else:
+        #     form.instance.trip_status = "Yet to start"
+        
         return super().form_valid(form)

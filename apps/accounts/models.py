@@ -1,6 +1,7 @@
 # apps/accounts/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from enum import Enum
 
 
 # Create custom accounts for the database
@@ -16,3 +17,10 @@ class CustomAccount(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# Class representing Trip Status, subclass of Enum
+class TripStatus(Enum):
+    YTS = "Yet to start"
+    IP = "In progress"
+    CP = "Completed"
+    ENS = "Emergency notification sent"

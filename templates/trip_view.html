@@ -14,16 +14,25 @@
                 <th scope="col">Location</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         {% for trip in object_list %}
             <tbody>
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ trip.trip_name }}</td>
+                    <td >{{ trip.trip_name }}</td>
                     <td>{{ trip.trip_location }}</td>
                     <td>{{ trip.trip_start }}</td>
                     <td>{{ trip.trip_end }}</td>
+                    <td>{{ trip.trip_status }}</td>
+                    <td>
+                        <a href="" class="btn btn-outline-success btn-md" \
+                            role="button" aria-pressed="true">
+                            Mark complete
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         {% endfor %}

@@ -15,6 +15,14 @@ h1,h2,h3,h4,h5,h6 {
     /* font-weight: bold; */
 }
 
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.table > tbody > tr > th {
+    vertical-align: middle;
+}
+
 .navbar-title {
     font-family: 'PT Sans', sans-serif;
     font-weight: bold;
