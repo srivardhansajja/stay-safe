@@ -8,7 +8,7 @@ from .models import Trip
 
 
 #  Render the homepage
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'
 
 
