@@ -34,7 +34,7 @@ class TripCreateForm(forms.ModelForm):
 
 
 # Form to add emergency contact information
-class EmergencyContactForms(forms.ModelForm):
+class EmergencyContactForm(forms.ModelForm):
     class Meta:
         model = EmergencyContact
         fields = [
