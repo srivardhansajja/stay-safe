@@ -38,7 +38,7 @@ class TripCreateView(LoginRequiredMixin, CreateView):
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
-    template_name = 'add_emergency_ontact.html'
+    template_name = 'add_emergency_contact.html'
     form_class = EmergencyContactForm
     success_url = reverse_lazy('home')
     login_url = '/accounts/login/'
