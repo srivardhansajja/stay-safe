@@ -1,6 +1,6 @@
 # apps/pages/forms.py
 from django import forms
-from .models import Trip
+from .models import Trip, EmergencyContact
 
 
 # Form used to create trips
@@ -31,3 +31,14 @@ class TripCreateForm(forms.ModelForm):
             attrs={'type': 'datetime-local'}
         )
     )
+
+
+# Form to add emergency contact information
+class EmergencyContactForms(forms.ModelForm):
+    class Meta:
+        model = EmergencyContact
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+        ]
