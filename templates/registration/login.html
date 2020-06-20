@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Login</h3>
+    <br><h3>Login</h3><br>
     <form method="post">
         {% csrf_token %}
         {{ form | crispy }}

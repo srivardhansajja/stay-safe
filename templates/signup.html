@@ -5,10 +5,11 @@
 
 <!-- Signup form -->
 {% block content %}
-    <h3>Sign up</h3>
+    <br><h3>Sign up</h3><br>
     <form method="post">
         {% csrf_token %}
         {{ form | crispy }}
         <button class="btn btn-success ml-1" type="submit">Sign up</button>
+        <br><br>
     </form>
 {% endblock %}

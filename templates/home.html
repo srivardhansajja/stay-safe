@@ -20,17 +20,11 @@
                         role="button" aria-pressed="true">
                         Create Trip
                     </a>
-        
-                    <!-- View a trip -->
-                    <a href="{% url 'trip_list' %}" class="btn btn-outline-info btn-md mr-1" \
-                        role="button" aria-pressed="true">
-                        View Upcoming Trips
-                    </a> 
 
                     <!-- View a trip -->
                     <a href="{% url 'trip_list' %}" class="btn btn-outline-info btn-md mr-1" \
                         role="button" aria-pressed="true">
-                        View All Trips
+                        View Trips
                     </a> 
         
                     <!-- Set emergency contact details -->
@@ -54,6 +48,8 @@
 
     <!-- User is logged out -->
     {% else %}
-        <p>You are not logged in</p>
+        <br><b><h1>Welcome to Stay Safe!</b></h1>
+        <h5>Log in or sign up to create and view your trips</h5>
+        
     {% endif %}
 {% endblock %}
