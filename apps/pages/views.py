@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+from datetime import date, timedelta
 from .forms import TripCreateForm
 from .models import Trip
 
@@ -21,6 +22,18 @@ class TripPageView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Trip.objects.filter(trip_owner=self.request.user)
+
+
+# Render the page to view upcoming trips
+class UpcomingTripsView(TripPageView):
+    template_name = 'upcoming_trips.html'
+    delta = date.today() + timedelta(7)
+
+    def getqueryset(self):
+        return Trip.objects.filter(
+            trip_owner=self.request.user,
+            trip_start__lte=str(self.delta),
+        )
 
 
 # Render the page to Create Trips
