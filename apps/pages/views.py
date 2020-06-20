@@ -29,7 +29,7 @@ class UpcomingTripsView(TripPageView):
     template_name = 'upcoming_trips.html'
     delta = date.today() + timedelta(7)
 
-    def getqueryset(self):
+    def get_queryset(self):
         return Trip.objects.filter(
             trip_owner=self.request.user,
             trip_start__lte=self.delta,
