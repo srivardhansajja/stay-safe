@@ -32,7 +32,7 @@ class UpcomingTripsView(TripPageView):
     def getqueryset(self):
         return Trip.objects.filter(
             trip_owner=self.request.user,
-            trip_start__lte=str(self.delta),
+            trip_start__lte=self.delta,
         )
 
 
