@@ -5,10 +5,20 @@
 
 <!-- Form for creating new trips -->
 {% block content %}
-    <h1>Create a Trip</h1>
+    <br><h1>Create a new trip</h1><br>
     <form action="" method="post">
         {% csrf_token %}
-        {{ form | crispy }}
+        {{ form.trip_name | as_crispy_field }}
+        {{ form.trip_location | as_crispy_field }}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.trip_start | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.trip_end | as_crispy_field }}
+            </div>
+        </div>
+        <br>
         <input class="btn btn-success ml-1" type="submit" value="Create Trip">
     </form>
-{% endblock %}    
+{% endblock %}

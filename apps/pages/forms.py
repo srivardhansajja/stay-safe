@@ -14,7 +14,13 @@ class TripCreateForm(forms.ModelForm):
             'trip_end',
         ]
 
+        labels = {
+            'trip_name':'Trip name/alias',
+            'trip_location':'Location',
+        }
+
     trip_start = forms.DateTimeField(
+        label = 'Start date',
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
@@ -24,6 +30,7 @@ class TripCreateForm(forms.ModelForm):
     )
 
     trip_end = forms.DateTimeField(
+        label = 'End date',
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(

@@ -16,12 +16,32 @@
 
     <!-- Local CSS -->
     <link rel="stylesheet" href="{% static 'css/_base.css' %}">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+        function myFunction() {
+            var txt;
+            if (confirm("Do you want to send a message to your emergency contacts and call 911?")) {
+                // txt = "You pressed OK!";
+            } else {
+                // txt = "You pressed Cancel!";
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <!-- Font: Raleway --> <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Font: PT Sans --> <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb- ">
-    <a class="navbar-brand" href="{% url 'home' %}">
-        Stay Safe
+    <a class="navbar-brand navbar-title" href="{% url 'home' %}">
+        stay safe
     </a>
 
     <!-- Navbar -->
@@ -56,13 +76,18 @@
             <!-- User is logged out: Login or signup -->
         {% else %}
             <form class="form-inline ml-auto">
-                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-md mr-1" role="button"
+                <a href="" onclick="myFunction();" class="btn btn-outline-danger btn-md mr-1" data-dismiss="alert" aria-label="Show" role="button" aria-pressed="true">
+                    Emergency
+                </a>
+                
+                <a href="{% url 'signup' %}" class="btn btn-outline-info btn-md mr-1" role="button" aria-pressed="true">
+                    Signup
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-md mr-1" role="button"
                    aria-pressed="true">
                     Login
                 </a>
-                <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-md" role="button" aria-pressed="true">
-                    Signup
-                </a>
+
             </form>
         {% endif %}
     </div>
