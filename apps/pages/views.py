@@ -46,7 +46,7 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trip_end__lt=datetime.now()
             )
         }
-        # Update trip status for each query set
+        # Update trip status for each query
         for key, val in queryset.items():
             trips_set = queryset[key]
             if key == 'in_progress':
@@ -68,5 +68,4 @@ class TripCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.trip_owner = self.request.user
-        form.instance.trip_status = "Yet to start"
         return super().form_valid(form)
