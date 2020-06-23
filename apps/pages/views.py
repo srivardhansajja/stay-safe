@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 from .forms import TripCreateForm
 from .models import Trip
 
@@ -31,20 +31,30 @@ class TripPageView(LoginRequiredMixin, ListView):
             # In Progress
             'in_progress': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__gte=date.today(),
-                trip_end__lte=date.today()
+                trip_start__lte=datetime.now(),
+                trip_end__gt=datetime.now()
             ),
             # Upcoming
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__lte=(date.today() + timedelta(7))
+                trip_start__gt=datetime.now(),
+                trip_end__lte=(datetime.now() + timedelta(7))
             ),
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_end__lte=date.today()
+                trip_end__lt=datetime.now()
             )
         }
+        # Update trip status for each query set
+        for key, val in queryset.items():
+            trips_set = queryset[key]
+            if key == 'in_progress':
+                trips_set.update(trip_status="In progress")
+            if key == 'upcoming':
+                trips_set.update(trip_status="Yet to start")
+            if key == 'past':
+                trips_set.update(trip_status="Completed")
         return queryset
 
 
@@ -58,10 +68,5 @@ class TripCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.trip_owner = self.request.user
-
         form.instance.trip_status = "Yet to start"
-        # if datetime.now() > form.instance.trip_start:
-        #     form.instance.trip_status = "In progress"
-        # else:
-        #     form.instance.trip_status = "Yet to start"
         return super().form_valid(form)

@@ -31,7 +31,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
+                    {% for trip in trips.in_progress %}
                         <!-- {% if trip.start_date == now %} -->
                         <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
                         <tbody>
@@ -82,7 +82,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
+                    {% for trip in trips.upcoming %}
                         <!-- {% if trip.start_date == now %} -->
                         <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
                         <tbody>
@@ -132,7 +132,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
+                    {% for trip in trips.past %}
                         <!-- {% if trip.start_date == now %} -->
                         <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
                         <tbody>
