@@ -31,9 +31,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
-                        <!-- {% if trip.start_date == now %} -->
-                        <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
+                    {% for trip in trips.in_progress %}
                         <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
@@ -50,7 +48,6 @@
                                 </td>
                             </tr>
                         </tbody>
-                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -82,9 +79,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
-                        <!-- {% if trip.start_date == now %} -->
-                        <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
+                    {% for trip in trips.upcoming %}
                         <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
@@ -101,7 +96,6 @@
                                 </td>
                             </tr>
                         </tbody>
-                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -132,9 +126,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    {% for trip in object_list %}
-                        <!-- {% if trip.start_date == now %} -->
-                        <!-- <td>{% now "F d, H:m Y-m-d:F" %}</td> -->
+                    {% for trip in trips.past %}
                         <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
@@ -151,15 +143,10 @@
                                 </td>
                             </tr>
                         </tbody>
-                        {% endif %}
                     {% endfor %}
                 </table>
               </div>
             </div>
           </div>
     </div>
-
-
-
-      
 {% endblock %}
