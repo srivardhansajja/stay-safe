@@ -3,9 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from datetime import datetime
-from .forms import TripCreateForm
-from .models import Trip
+from .forms import TripCreateForm, EmergencyContactForm
+from .models import Trip, EmergencyContact
 
 
 #  Render the homepage
@@ -40,5 +39,17 @@ class TripCreateView(LoginRequiredMixin, CreateView):
         #     form.instance.trip_status = "In progress"
         # else:
         #     form.instance.trip_status = "Yet to start"
-        
+
+        return super().form_valid(form)
+
+
+class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
+    model = EmergencyContact
+    template_name = 'add_emergency_contact.html'
+    form_class = EmergencyContactForm
+    success_url = reverse_lazy('home')
+    login_url = '/accounts/login/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
         return super().form_valid(form)

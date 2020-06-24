@@ -28,3 +28,21 @@ class Trip(models.Model):
 
     def get_absolute_url(self):
         return reverse('home', args=[str(self.id)])
+
+
+class EmergencyContact(models.Model):
+    user = models.ForeignKey(
+        CustomAccount,
+        on_delete=models.CASCADE,
+        related_name='emergency_contacts'
+    )
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField(
+        blank=True,
+        max_length=30,
+        unique=True,
+    )
+
+    def __str__(self):
+        return f'Contact: {self.first_name} {self.last_name}'

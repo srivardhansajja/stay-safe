@@ -1,0 +1,17 @@
+<!-- templates/add_emergency_contact.html -->
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+<!-- Form to add emergency contacts -->
+{% block content %}
+    <br><h1>Contact information:</h1><br>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.first_name | as_crispy_field }}
+        {{ form.last_name | as_crispy_field }}
+        {{ form.email | as_crispy_field }}
+        <br>
+        <input class="btn btn-success ml-1" type="submit" value="Add Emergency Contact">
+    </form>
+{% endblock %}
