@@ -1,0 +1,28 @@
+<!-- templates/add_emergency_contact.html -->
+{% extends '_base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Form to add emergency contacts -->
+{% block content %}
+    <br><h1>Contact information:</h1><br>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.first_name | as_crispy_field }}
+        {{ form.last_name | as_crispy_field }}
+        {{ form.email | as_crispy_field }}
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'max_contacts' in message.tags %}
+                    <h6 class="contact-error">Error: Maximum emergency contacts set.</h6>
+                {% endif %}
+                {% if 'duplicate_contact' in message.tags %}
+                    <h6 class="contact-error">Error: This emergency contact has already been added.</h6>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <br>
+        <input class="btn btn-success ml-1" type="submit" value="Add Emergency Contact">
+    </form>
+{% endblock %}
