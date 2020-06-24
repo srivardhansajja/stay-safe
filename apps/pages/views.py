@@ -1,10 +1,10 @@
 # apps/pages/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from datetime import datetime, timedelta
-from .forms import TripCreateForm
+from .forms import TripCreateForm, TripUpdateForm
 from .models import Trip
 
 
@@ -69,3 +69,16 @@ class TripCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.trip_owner = self.request.user
         return super().form_valid(form)
+
+
+class TripUpdateView(LoginRequiredMixin, UpdateView):
+    model = Trip
+    form_class = TripUpdateForm
+    template_name = 'trip_update.html'
+    success_url = reverse_lazy('trip_list')
+
+
+class TripDeleteView(LoginRequiredMixin, DeleteView):
+    model = Trip
+    template_name = 'trip_delete.html'
+    success_url = reverse_lazy('trip_list')

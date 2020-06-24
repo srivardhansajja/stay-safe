@@ -1,0 +1,13 @@
+<!-- templates/trip_delete.html -->
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+<!-- Form for deleting trips -->
+{% block content %}
+    <br><h1>Delete your trip</h1><br>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input class="btn btn-success ml-1" type="submit" value="Delete Trip">
+    </form>
+{% endblock %}
