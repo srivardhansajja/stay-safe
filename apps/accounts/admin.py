@@ -1,6 +1,7 @@
 # apps/accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from apps.pages.models import EmergencyContact
 from .forms import CustomCreateForm, CustomChangeForm
 from .models import CustomAccount
 
@@ -16,3 +17,6 @@ class CustomAdminAccount(UserAdmin):
 
 # Register custom user accounts and custom admins
 admin.site.register(CustomAccount, CustomAdminAccount)
+
+# Register emergency contact model
+admin.site.register(EmergencyContact)
