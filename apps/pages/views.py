@@ -3,7 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 from .forms import TripCreateForm
 from .models import Trip
 
@@ -31,19 +32,19 @@ class TripPageView(LoginRequiredMixin, ListView):
             # In Progress
             'in_progress': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__lte=datetime.now(),
-                trip_end__gt=datetime.now()
+                trip_start__lte=timezone.now(),
+                trip_end__gt=timezone.now()
             ),
             # Upcoming
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__gt=datetime.now(),
-                trip_end__lte=(datetime.now() + timedelta(7))
+                trip_start__gt=timezone.now(),
+                trip_end__lte=(timezone.now() + timedelta(7))
             ),
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_end__lt=datetime.now()
+                trip_end__lt=timezone.now()
             )
         }
         # Update trip status for each query
