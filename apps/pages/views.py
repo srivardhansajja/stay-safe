@@ -24,28 +24,29 @@ class TripPageView(LoginRequiredMixin, ListView):
 
     # Trip querysets for each trip status
     def get_queryset(self):
+        now = timezone.now()
         queryset = {
             # All
             'all': Trip.objects.filter(
                 trip_owner=self.request.user
-            ),
+            ).order_by('trip_start'),
             # In Progress
             'in_progress': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__lte=timezone.now(),
-                trip_end__gt=timezone.now()
-            ),
+                trip_start__lte=now,
+                trip_end__gt=now
+            ).order_by('trip_start'),
             # Upcoming
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_start__gt=timezone.now(),
-                trip_end__lte=(timezone.now() + timedelta(7))
-            ),
+                trip_start__gt=now,
+                trip_end__lte=(now + timedelta(7))
+            ).order_by('trip_start'),
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_end__lt=timezone.now()
-            )
+                trip_end__lt=now
+            ).order_by('trip_start')
         }
         # Update trip status for each query
         for key, val in queryset.items():
