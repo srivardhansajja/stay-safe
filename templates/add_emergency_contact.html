@@ -1,6 +1,7 @@
 <!-- templates/add_emergency_contact.html -->
 {% extends '_base.html' %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 <!-- Form to add emergency contacts -->
@@ -11,6 +12,11 @@
         {{ form.first_name | as_crispy_field }}
         {{ form.last_name | as_crispy_field }}
         {{ form.email | as_crispy_field }}
+        {% if messages %}
+            {% for message in messages %}
+                <h6 class="contact-error">Maximum emergency contacts set.</h6>
+            {% endfor %}
+        {% endif %}
         <br>
         <input class="btn btn-success ml-1" type="submit" value="Add Emergency Contact">
     </form>
