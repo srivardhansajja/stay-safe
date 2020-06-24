@@ -1,7 +1,6 @@
 # apps/accounts/models.py
-from django.db.models import EmailField
+from django.db.models import EmailField, CharField
 from django.contrib.auth.models import AbstractUser
-from enum import Enum
 
 
 # Create custom accounts for the database
@@ -17,13 +16,13 @@ class CustomAccount(AbstractUser):
             null=False
     )
 
-    first_name = models.CharField(
+    first_name = CharField(
             verbose_name='First name',
             max_length=30,
             blank=False
     )
 
-    last_name = models.CharField(
+    last_name = CharField(
             verbose_name='Last name',
             max_length=150,
             blank=False
