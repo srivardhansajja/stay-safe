@@ -15,12 +15,12 @@ class TripCreateForm(forms.ModelForm):
         ]
 
         labels = {
-            'trip_name':'Trip name/alias',
-            'trip_location':'Location',
+            'trip_name': 'Trip name/alias',
+            'trip_location': 'Location',
         }
 
     trip_start = forms.DateTimeField(
-        label = 'Start date',
+        label='Start date',
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
@@ -30,7 +30,44 @@ class TripCreateForm(forms.ModelForm):
     )
 
     trip_end = forms.DateTimeField(
-        label = 'End date',
+        label='End date',
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M',
+            attrs={'type': 'datetime-local'}
+        )
+    )
+
+
+# Form used to update trips
+class TripUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Trip
+        fields = [
+            'trip_location',
+            'trip_name',
+            'trip_start',
+            'trip_end',
+        ]
+
+        labels = {
+            'trip_name': 'Trip name/alias',
+            'trip_location': 'Location',
+        }
+
+    trip_start = forms.DateTimeField(
+        label='Start date',
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M',
+            attrs={'type': 'datetime-local'}
+        )
+    )
+
+    trip_end = forms.DateTimeField(
+        label='End date',
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(

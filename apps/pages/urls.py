@@ -14,7 +14,7 @@ urlpatterns = [
         name='home'
     ),
 
-    # Add/View Trips
+    # Add/View/Edit Trips
     path(
         'trips/',
         views.TripPageView.as_view(),
@@ -25,6 +25,14 @@ urlpatterns = [
         views.TripCreateView.as_view(),
         name='trip_create'
     ),
+    path('trips/<int:pk>/edit',
+         views.TripUpdateView.as_view(),
+         name='trip_edit'
+         ),
+    path('trips/<int:pk>/delete',
+         views.TripDeleteView.as_view(),
+         name='trip_delete'
+         ),
 
     # Password Reset
     path(

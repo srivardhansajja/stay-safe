@@ -4,23 +4,25 @@
 {% block content %}
 
     <br><h1>Scheduled trips</h1><br>
-    
+
     <!-- Trip table -->
-    
+
 
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample">
         <div class="card">
-          <div class="card-header" id="headingThree">
-            <h2 class="mb-0">
-              <button class="btn btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                <b>In Progress</b>
-              </button>
-            </h2>
-          </div>
-          <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample3">
-            <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-info" type="button" data-toggle="collapse"
+                            data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <b>In Progress</b>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse show" aria-labelledby="headingThree"
+                 data-parent="#accordionExample3">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">Trip</th>
@@ -29,46 +31,54 @@
                             <th scope="col">End Date</th>
                             <th scope="col">Status</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
-                    </thead>
-                    {% for trip in trips.in_progress %}
-                        <tbody>
+                        </thead>
+                        {% for trip in trips.in_progress %}
+                            <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td >{{ trip.trip_name }}</td>
+                                <td>{{ trip.trip_name }}</td>
                                 <td>{{ trip.trip_location }}</td>
                                 <td>{{ trip.trip_start }}</td>
                                 <td>{{ trip.trip_end }}</td>
                                 <td>{{ trip.trip_status }}</td>
                                 <td>
-                                    <a href="" class="btn btn-outline-success btn-md" \
-                                        role="button" aria-pressed="true">
-                                        Mark as Completed
+                                    <a href="{% url 'trip_edit' trip.pk %}" class="btn btn-outline-info btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Edit Trip
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'trip_delete' trip.pk %}" class="btn btn-outline-danger btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Delete Trip
                                     </a>
                                 </td>
                             </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-          </div>
         </div>
     </div>
     <br>
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample2">
         <div class="card">
-          <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-              <button class="btn btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                <b>Upcoming</b>
-              </button>
-            </h2>
-          </div>
-      
-          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample2">
-            <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-info" type="button" data-toggle="collapse"
+                            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Upcoming</b>
+                    </button>
+                </h2>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample2">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">Trip</th>
@@ -77,45 +87,53 @@
                             <th scope="col">End Date</th>
                             <th scope="col">Status</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
-                    </thead>
-                    {% for trip in trips.upcoming %}
-                        <tbody>
+                        </thead>
+                        {% for trip in trips.upcoming %}
+                            <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td >{{ trip.trip_name }}</td>
+                                <td>{{ trip.trip_name }}</td>
                                 <td>{{ trip.trip_location }}</td>
                                 <td>{{ trip.trip_start }}</td>
                                 <td>{{ trip.trip_end }}</td>
                                 <td>{{ trip.trip_status }}</td>
                                 <td>
-                                    <a href="" class="btn btn-outline-info btn-md" \
-                                        role="button" aria-pressed="true">
-                                        Mark as In Progress
+                                    <a href="{% url 'trip_edit' trip.pk %}" class="btn btn-outline-info btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Edit Trip
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'trip_delete' trip.pk %}" class="btn btn-outline-danger btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Delete Trip
                                     </a>
                                 </td>
                             </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-          </div>
         </div>
     </div>
     <br>
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample3">
         <div class="card">
             <div class="card-header" id="headingTwo">
-              <h2 class="mb-0">
-                <button class="btn btn-link collapsed text-info" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  <b>Past</b>
-                </button>
-              </h2>
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed text-info" type="button" data-toggle="collapse"
+                            data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <b>Past</b>
+                    </button>
+                </h2>
             </div>
             <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-              <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">Trip</th>
@@ -124,29 +142,36 @@
                             <th scope="col">End Date</th>
                             <th scope="col">Status</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
-                    </thead>
-                    {% for trip in trips.past %}
-                        <tbody>
+                        </thead>
+                        {% for trip in trips.past %}
+                            <tbody>
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td >{{ trip.trip_name }}</td>
+                                <td>{{ trip.trip_name }}</td>
                                 <td>{{ trip.trip_location }}</td>
                                 <td>{{ trip.trip_start }}</td>
                                 <td>{{ trip.trip_end }}</td>
                                 <td>{{ trip.trip_status }}</td>
+                                 <td>
+                                    <a href="{% url 'trip_edit' trip.pk %}" class="btn btn-outline-info btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Edit Trip
+                                    </a>
+                                </td>
                                 <td>
-                                    <a href="" class="btn btn-outline-info btn-md" \
-                                        role="button" aria-pressed="true">
-                                        Mark as In Progress
+                                    <a href="{% url 'trip_delete' trip.pk %}" class="btn btn-outline-danger btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Delete Trip
                                     </a>
                                 </td>
                             </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
-              </div>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-          </div>
+        </div>
     </div>
 {% endblock %}
