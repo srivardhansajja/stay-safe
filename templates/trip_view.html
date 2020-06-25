@@ -7,7 +7,7 @@
 
     <!-- Trip table -->
 
-
+    {% if trips.in_progress.count > 0 %}
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample">
         <div class="card">
             <div class="card-header" id="headingThree">
@@ -64,6 +64,8 @@
         </div>
     </div>
     <br>
+    {% endif %}
+    {% if trips.upcoming.count > 0 %}
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample2">
         <div class="card">
             <div class="card-header" id="headingOne">
@@ -120,6 +122,8 @@
         </div>
     </div>
     <br>
+    {% endif %}
+    {% if trips.past.count > 0 %}
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample3">
         <div class="card">
             <div class="card-header" id="headingTwo">
@@ -174,4 +178,5 @@
             </div>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
