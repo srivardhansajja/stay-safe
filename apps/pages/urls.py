@@ -34,6 +34,13 @@ urlpatterns = [
          name='trip_delete'
          ),
 
+    # Add emergency contact
+    path(
+        'add_emergency_contact/',
+        views.EmergencyContactCreateView.as_view(),
+        name='add_emergency_contact',
+    ),
+
     # Password Reset
     path(
         'password_reset/',
