@@ -2,11 +2,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.http.response import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.contrib import messages
 from datetime import timedelta
-from .forms import TripCreateForm, TripUpdateForm
-from .models import Trip
+from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm
+from .models import Trip, EmergencyContact
 
 
 #  Render the homepage
@@ -84,3 +86,36 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     model = Trip
     template_name = 'trip_delete.html'
     success_url = reverse_lazy('trip_list')
+
+
+class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
+    model = EmergencyContact
+    template_name = 'add_emergency_contact.html'
+    form_class = EmergencyContactForm
+    success_url = reverse_lazy('home')
+    login_url = '/accounts/login/'
+
+    # Return the number of emergency contacts associated with the user
+    def contact_count(self):
+        return EmergencyContact.objects.filter(user=self.request.user).count()
+
+    # Return true if 'post_email' is a duplicate email for the user
+    def contact_duplicate(self, post_email):
+        return EmergencyContact.objects.filter(
+                user=self.request.user, email=post_email).exists()
+
+    # Re-direct with an error if contact emails max out or have duplicates
+    def post(self, request, *args, **kwargs):
+        if self.contact_count() >= 5:
+            messages.error(request, "max", extra_tags='max_contacts')
+            return HttpResponseRedirect(reverse('add_emergency_contact'))
+
+        if self.contact_duplicate(request.POST.get('email')):
+            messages.error(request, "dup", extra_tags='duplicate_contact')
+            return HttpResponseRedirect(reverse('add_emergency_contact'))
+
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
