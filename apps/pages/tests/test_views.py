@@ -2,7 +2,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth import authenticate
 from apps.accounts.models import CustomAccount
-from apps.pages.models import EmergencyContact
 from django.contrib.messages import get_messages
 from django.contrib import auth
 

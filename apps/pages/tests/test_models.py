@@ -2,7 +2,6 @@
 import datetime
 from django.test import TestCase
 from apps.pages.models import Trip, EmergencyContact
-from apps.pages.tests.test_views import TestUserLogin
 from apps.accounts.models import CustomAccount
 
 
