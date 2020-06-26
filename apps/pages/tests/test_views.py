@@ -398,3 +398,77 @@ class TestEmergencyContactCreateView(TestUserLogin):
 
         # Check whether a redirect to the form occurred
         self.assertEqual(response.status_code, 302)
+
+    def test_max_emergency_contact_unique(self):
+        '''
+        Test: Adding the same emergency contact email is not allowed
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'ONE__@EMAIL.COM',
+        ]
+
+        # Add two emergency contacts with the same email
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/add_emergency_contact/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check that there is only one emergency contact (second not added)
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 1)
+
+        # Check for an error message (labeled 'dup' in pages/views.py)
+        message_list = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(
+            str(message_list[0]),
+            'dup'
+        )
+
+        # Check whether a redirect to the form occurred
+        self.assertEqual(response.status_code, 302)
+
+        # Check whether another user can add the same emergency contact
+        test_user_2 = CustomAccount.objects.create(
+            username='TEST_USER_TWO',
+            password='TEST_PASSWORD',
+            email='TEST_EMAIL_TWO@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME',
+            is_active=True,
+        )
+        # Login the second test user
+        test_user_2.set_password(test_user_2.password)
+        test_user_2.save()
+        client_2 = Client()
+        client_2.login(username='TEST_USER_TWO', password='TEST_PASSWORD')
+        authenticate(username='TEST_USER_TWO', password='TEST_PASSWORD')
+
+        # Assign the second test user the same emergency contact as the first
+        for addr in CONTACTS_EMAILS:
+            response = client_2.post(
+                '/add_emergency_contact/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check that there is one emergency contact added for the second user
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 1)
+
+        # Check that the emergency contact for both test users is the same
+        self.assertEqual(
+            self.test_user.emergency_contacts.values('email')[0],
+            test_user_2.emergency_contacts.values('email')[0]
+        )
+
+        # Logout the second test user
+        client_2.logout()
+        test_user_2.delete()
