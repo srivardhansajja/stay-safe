@@ -41,6 +41,13 @@ urlpatterns = [
         name='add_emergency_contact',
     ),
 
+    path(
+        'emergencycontacts/',
+        views.EmergencyContactPageView.as_view(),
+        name='emergencycontact_view',
+    ),
+
+
     # Password Reset
     path(
         'password_reset/',
