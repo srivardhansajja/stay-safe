@@ -304,3 +304,45 @@ class TestPasswordResetView(TestUserLogin):
         response = self.client.get('/reset/done/')
         self.assertContains(response, 'Password reset complete', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+
+#
+#  Add Emergency Contact Unit Tests
+#  ---------------------------------------------------------------------------
+class TestEmergencyContactCreateView(TestUserLogin):
+    '''
+    Test Case: EmergencyContactCreateView in apps/pages/views.py
+    '''
+    def test_logout_redirect(self):
+        '''
+        Test: Logged-out users attempting to access restricted URLs are
+              redirected to the login page.
+        '''
+        self.client.logout()
+        response = self.client.get('/add_emergency_contact/')
+        self.assertRedirects(
+            response, '/accounts/login/?next=/add_emergency_contact/'
+        )
+
+    def test_http_request_status_code(self):
+        '''
+        Test: Successful HTTP request status code
+        '''
+        response = self.client.get('/add_emergency_contact/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_rendered_template(self):
+        '''
+        Test: Intended templates are rendered
+        '''
+        response = self.client.get('/add_emergency_contact/')
+        self.assertTemplateUsed(response, 'add_emergency_contact.html')
+        self.assertTemplateUsed(response, '_base.html')
+
+    def test_html_contents(self):
+        '''
+        Test: Intended html content is rendered
+        '''
+        response = self.client.get('/add_emergency_contact/')
+        self.assertContains(response, 'Contact information:', html=True)
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
