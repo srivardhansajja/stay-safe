@@ -1,10 +1,14 @@
 # apps/pages/tests/test_models.py
 import datetime
 from django.test import TestCase
-from apps.pages.models import Trip
+from apps.pages.models import Trip, EmergencyContact
+from apps.pages.tests.test_views import TestUserLogin
 from apps.accounts.models import CustomAccount
 
 
+#
+#  Trip Model Unit Tests
+#  ---------------------------------------------------------------------------
 class TestTripModelFields(TestCase):
     '''
     Test Case:
@@ -90,3 +94,81 @@ class TestTripModelFields(TestCase):
         Test: Trip __str__ method
         '''
         self.assertEqual(str(self.test_trip), 'TEST_TRIP_NAME')
+
+
+#
+#  EmergencyContact Model Unit Tests
+#  ---------------------------------------------------------------------------
+class TestEmergencyContactModelFields(TestCase):
+    '''
+    Test Case:
+    Check if EmergencyContact objects can be successfully created and retain
+    their assigned fields.
+    '''
+    @classmethod
+    def setUpClass(cls):
+        '''
+        Create an emergency contact associated with a test user
+        '''
+        cls.test_user = CustomAccount.objects.create(
+            username='TEST_USER_2',
+            password='TEST_PASSWORD_2',
+            email='TEST_EMAIL_2@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME'
+        )
+        EmergencyContact.objects.create(
+            user=cls.test_user,
+            first_name='EMERGENCY_CONTACT_FIRSTNAME',
+            last_name='EMERGENCY_CONTACT_LASTNAME',
+            email='EMERGENCY_CONTACT@EMAIL.COM',
+        )
+        cls.test_econtact = EmergencyContact.objects.get(user=cls.test_user)
+
+    @classmethod
+    def tearDownClass(cls):
+        '''
+        Remove the user and associated trip objects from the database
+        '''
+        cls.test_user.delete()
+        cls.test_econtact.delete()
+
+    def test_number_of_emergency_contacts(self):
+        '''
+        Test: Number of emergency contacts created
+        '''
+        emergency_contact_count = len(EmergencyContact.objects.all())
+        self.assertEqual(emergency_contact_count, 1)
+
+    def test_emergency_contact_owner(self):
+        '''
+        Test: The test user owns the emergency contact
+        '''
+        self.assertEqual(self.test_user, self.test_econtact.user)
+
+    def test_emergency_contact_first_name(self):
+        '''
+        Test: Emergency contact's first name is expected
+        '''
+        self.assertEqual(
+            self.test_econtact.first_name,
+            'EMERGENCY_CONTACT_FIRSTNAME'
+        )
+
+    def test_emergency_contact_last_name(self):
+        '''
+        Test: Emergency contact's last name is expected
+        '''
+        self.assertEqual(
+            self.test_econtact.last_name,
+            'EMERGENCY_CONTACT_LASTNAME'
+        )
+
+    def test_emergency_contact_email(self):
+        '''
+        Test: Emergency contact's email is expected
+        '''
+        self.assertEqual(
+            self.test_econtact.email,
+            'EMERGENCY_CONTACT@EMAIL.COM'
+        )
