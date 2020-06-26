@@ -2,6 +2,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth import authenticate
 from apps.accounts.models import CustomAccount
+from apps.pages.models import EmergencyContact
+from django.contrib.messages import get_messages
 from django.contrib import auth
 
 
@@ -346,3 +348,53 @@ class TestEmergencyContactCreateView(TestUserLogin):
         response = self.client.get('/add_emergency_contact/')
         self.assertContains(response, 'Contact information:', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+    def test_max_emergency_contact_redirect(self):
+        '''
+        Test: Adding more than 5 emergency contacts is not allowed
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'TWO__@EMAIL.COM',
+            'THREE@EMAIL.COM',
+            'FOUR_@EMAIL.COM',
+            'FIVE_@EMAIL.COM',
+        ]
+
+        # Create 5 emergency contacts by posting to the form
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/add_emergency_contact/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check if there are 5 emergency contacts
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Add a sixth emergency contact
+        response = self.client.post(
+            '/add_emergency_contact/',
+            {
+                'first_name': 'SIX',
+                'last_name': 'SIX',
+                'email': 'SIX@EMAIL.COM'
+            }
+        )
+
+        # Check for an error message
+        message_list = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(
+            str(message_list[0]),
+            'max'
+        )
+
+        # Check if there are still 5 emergency contacts
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Check whether a redirect to the form occurred
+        self.assertEqual(response.status_code, 302)
