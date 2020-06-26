@@ -21,7 +21,8 @@ class TestUserLogin(TestCase):
             username='TEST_USER',
             password='TEST_PASSWORD',
             email='TEST_EMAIL@EMAIL.COM',
-            emergency_email='EMERGENCY_EMAIL@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME',
             is_active=True,
         )
         cls.test_user.set_password(cls.test_user.password)
@@ -79,28 +80,31 @@ class TestHomePageView(TestUserLogin):
     '''
     def test_http_request_status_code_logged_out(self):
         '''
-        Test: Successful HTTP request status code
+        Test: Successful HTTP redirect code when logged out users attempt to
+              access the homepage URL
         '''
         self.client.logout()
         response = self.client.get('')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_rendered_template_logged_out(self):
         '''
-        Test: Intended templates are rendered
+        Test: Intended templates are rendered when logged out users are
+              re-directed after attempting to access the home page URL
         '''
         self.client.logout()
-        response = self.client.get('')
-        self.assertTemplateUsed(response, 'home.html')
+        response = self.client.get('', follow=True)
+        self.assertTemplateUsed(response, 'registration/login.html')
         self.assertTemplateUsed(response, '_base.html')
 
     def test_html_contents_logged_out(self):
         '''
-        Test: The view renders the intended html content
+        Test: The intended html content is rendered when logged out users are
+              re-directed after attempting to access the home page URL
         '''
         self.client.logout()
-        response = self.client.get('')
-        self.assertContains(response, 'You are not logged in', html=True)
+        response = self.client.get('', follow=True)
+        self.assertContains(response, 'Login', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_http_request_status_code_logged_in(self):
@@ -123,7 +127,7 @@ class TestHomePageView(TestUserLogin):
         Test: Intended html content is rendered
         '''
         response = self.client.get('')
-        self.assertContains(response, 'Welcome TEST_USER!', html=True)
+        self.assertContains(response, 'Welcome, TEST_FIRST_NAME!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -163,7 +167,10 @@ class TestTripPageView(TestUserLogin):
         Test: Intended html content is rendered
         '''
         response = self.client.get('/trips/')
-        self.assertContains(response, 'Scheduled Trips', html=True)
+        self.assertContains(response, 'Scheduled trips', html=True)
+        self.assertContains(response, 'In Progress', html=True)
+        self.assertContains(response, 'Upcoming', html=True)
+        self.assertContains(response, 'Past', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -203,7 +210,7 @@ class TestTripCreateView(TestUserLogin):
         Test: Intended html content is rendered
         '''
         response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        self.assertContains(response, 'Create a new trip', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -278,22 +285,22 @@ class TestPasswordResetView(TestUserLogin):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/password_reset/')
+        self.assertContains(response, 'Password Reset', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_password_reset_done_html_contents(self):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/password_reset/done/')
+        self.assertContains(response, 'Reset email sent!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_password_reset_complete_html_contents(self):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/reset/done/')
+        self.assertContains(response, 'Password reset complete', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
