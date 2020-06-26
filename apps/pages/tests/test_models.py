@@ -20,7 +20,8 @@ class TestTripModelFields(TestCase):
             username='TEST_USER_2',
             password='TEST_PASSWORD_2',
             email='TEST_EMAIL_2@EMAIL.COM',
-            emergency_email='EMERGENCY_EMAIL_2@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME'
         )
         Trip.objects.create(
             trip_owner=cls.test_user,
