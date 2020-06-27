@@ -1,0 +1,56 @@
+<!-- templates/trip_page.html -->
+{% extends '_base.html' %}
+
+{% block content %}
+
+    <br>
+    <div class="row">
+        <div class="col-md-6 mb-0">
+            <h1>Emergency Contacts</h1>
+        </div>
+        <div class="col-md-6 mb-0" >
+            <a href="{% url 'emergencycontact_add' %}" class="btn btn-info btn-md mr-1 float-right" \
+                role="button" aria-pressed="true">
+                Create contact
+            </a> 
+        </div>
+    </div>
+    <br>
+
+    <!-- Emergency Contacts table -->
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        {% for contact in emergency_contacts %}
+            <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ contact.first_name }}</td>
+                <td>{{ contact.last_name }}</td>
+                <td>{{ contact.email }}</td>
+                <td>
+                    <a href="{% url 'emergencycontact_edit' contact.pk %}" class="btn btn-outline-info btn-md" \
+                        role="button" aria-pressed="true">
+                        Edit contact
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'emergencycontact_delete' contact.pk %}" class="btn btn-outline-danger btn-md" \
+                        role="button" aria-pressed="true">
+                        Delete contact
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+{% endblock %}
