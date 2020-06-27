@@ -81,53 +81,26 @@ class TestHomePageView(TestUserLogin):
     '''
     def test_http_request_status_code_logged_out(self):
         '''
-        Test: Successful HTTP redirect code when logged out users attempt to
-              access the homepage URL
+        Test: Logged out users accessing the homepage URL are presented
+              with the intended content from the home and base templates.
         '''
         self.client.logout()
         response = self.client.get('')
-        self.assertEqual(response.status_code, 302)
-
-    def test_rendered_template_logged_out(self):
-        '''
-        Test: Intended templates are rendered when logged out users are
-              re-directed after attempting to access the home page URL
-        '''
-        self.client.logout()
-        response = self.client.get('', follow=True)
-        self.assertTemplateUsed(response, 'registration/login.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
         self.assertTemplateUsed(response, '_base.html')
-
-    def test_html_contents_logged_out(self):
-        '''
-        Test: The intended html content is rendered when logged out users are
-              re-directed after attempting to access the home page URL
-        '''
-        self.client.logout()
-        response = self.client.get('', follow=True)
-        self.assertContains(response, 'Login', html=True)
+        self.assertContains(response, 'Welcome to Stay Safe!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_http_request_status_code_logged_in(self):
         '''
-        Test: Successful HTTP request status code
+        Test: Logged in users accessing the homepage URL are presented
+              with the intended content from the home and base templates.
         '''
         response = self.client.get('')
         self.assertEqual(response.status_code, 200)
-
-    def test_rendered_template_logged_in(self):
-        '''
-        Test: Intended templates are rendered
-        '''
-        response = self.client.get('')
         self.assertTemplateUsed(response, 'home.html')
         self.assertTemplateUsed(response, '_base.html')
-
-    def test_html_contents_logged_in(self):
-        '''
-        Test: Intended html content is rendered
-        '''
-        response = self.client.get('')
         self.assertContains(response, 'Welcome, TEST_FIRST_NAME!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
@@ -169,9 +142,6 @@ class TestTripPageView(TestUserLogin):
         '''
         response = self.client.get('/trips/')
         self.assertContains(response, 'Scheduled trips', html=True)
-        self.assertContains(response, 'In Progress', html=True)
-        self.assertContains(response, 'Upcoming', html=True)
-        self.assertContains(response, 'Past', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -320,32 +290,21 @@ class TestEmergencyContactCreateView(TestUserLogin):
               redirected to the login page.
         '''
         self.client.logout()
-        response = self.client.get('/add_emergency_contact/')
+        response = self.client.get('/emergencycontacts/')
         self.assertRedirects(
-            response, '/accounts/login/?next=/add_emergency_contact/'
+            response, '/accounts/login/?next=/emergencycontacts/'
         )
 
     def test_http_request_status_code(self):
         '''
-        Test: Successful HTTP request status code
+        Test: Logged in users accessing the homepage URL are presented
+              with the intended content from the emergency contact templates.
         '''
-        response = self.client.get('/add_emergency_contact/')
+        response = self.client.get('/emergencycontacts/')
         self.assertEqual(response.status_code, 200)
-
-    def test_rendered_template(self):
-        '''
-        Test: Intended templates are rendered
-        '''
-        response = self.client.get('/add_emergency_contact/')
-        self.assertTemplateUsed(response, 'add_emergency_contact.html')
+        self.assertTemplateUsed(response, 'emergencycontact_view.html')
         self.assertTemplateUsed(response, '_base.html')
-
-    def test_html_contents(self):
-        '''
-        Test: Intended html content is rendered
-        '''
-        response = self.client.get('/add_emergency_contact/')
-        self.assertContains(response, 'Contact information:', html=True)
+        self.assertContains(response, 'Emergency Contacts', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_max_emergency_contact_redirect(self):
@@ -363,7 +322,7 @@ class TestEmergencyContactCreateView(TestUserLogin):
         # Create 5 emergency contacts by posting to the form
         for addr in CONTACTS_EMAILS:
             response = self.client.post(
-                '/add_emergency_contact/',
+                '/emergencycontact/add/',
                 {
                     'first_name': addr[0:5],
                     'last_name': addr[0:1],
@@ -376,7 +335,7 @@ class TestEmergencyContactCreateView(TestUserLogin):
 
         # Add a sixth emergency contact
         response = self.client.post(
-            '/add_emergency_contact/',
+            '/emergencycontact/add/',
             {
                 'first_name': 'SIX',
                 'last_name': 'SIX',
@@ -410,7 +369,7 @@ class TestEmergencyContactCreateView(TestUserLogin):
         # Add two emergency contacts with the same email
         for addr in CONTACTS_EMAILS:
             response = self.client.post(
-                '/add_emergency_contact/',
+                '/emergencycontact/add/',
                 {
                     'first_name': addr[0:5],
                     'last_name': addr[0:1],
@@ -451,7 +410,7 @@ class TestEmergencyContactCreateView(TestUserLogin):
         # Assign the second test user the same emergency contact as the first
         for addr in CONTACTS_EMAILS:
             response = client_2.post(
-                '/add_emergency_contact/',
+                '/emergencycontact/add/',
                 {
                     'first_name': addr[0:5],
                     'last_name': addr[0:1],

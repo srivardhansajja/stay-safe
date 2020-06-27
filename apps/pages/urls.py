@@ -47,7 +47,7 @@ urlpatterns = [
         views.EmergencyContactPageView.as_view(),
         name='emergencycontact_view',
     ),
-    
+
     # Update emergency contacts
     path(
         'emergencycontacts/<int:pk>/edit',
