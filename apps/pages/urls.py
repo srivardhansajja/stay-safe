@@ -36,9 +36,30 @@ urlpatterns = [
 
     # Add emergency contact
     path(
-        'add_emergency_contact/',
+        'emergencycontact/add/',
         views.EmergencyContactCreateView.as_view(),
-        name='add_emergency_contact',
+        name='emergencycontact_add',
+    ),
+
+    # View emergency contacts
+    path(
+        'emergencycontacts/',
+        views.EmergencyContactPageView.as_view(),
+        name='emergencycontact_view',
+    ),
+    
+    # Update emergency contacts
+    path(
+        'emergencycontacts/<int:pk>/edit',
+        views.EmergencyContactUpdateView.as_view(),
+        name='emergencycontact_edit'
+    ),
+
+    # Delete emergency contacts
+    path(
+        'emergencycontacts/<int:pk>/delete',
+        views.EmergencyContactDeleteView.as_view(),
+        name='emergencycontact_delete'
     ),
 
     # Password Reset
