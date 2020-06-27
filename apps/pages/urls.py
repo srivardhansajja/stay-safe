@@ -36,9 +36,9 @@ urlpatterns = [
 
     # Add emergency contact
     path(
-        'add_emergency_contact/',
+        'emergencycontact/add/',
         views.EmergencyContactCreateView.as_view(),
-        name='add_emergency_contact',
+        name='emergencycontact_add',
     ),
 
     # View emergency contacts

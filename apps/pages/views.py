@@ -90,7 +90,7 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
-    template_name = 'add_emergency_contact.html'
+    template_name = 'emergencycontact_add.html'
     form_class = EmergencyContactForm
     success_url = reverse_lazy('home')
     login_url = '/accounts/login/'
@@ -108,11 +108,11 @@ class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         if self.contact_count() >= 5:
             messages.error(request, "max", extra_tags='max_contacts')
-            return HttpResponseRedirect(reverse('add_emergency_contact'))
+            return HttpResponseRedirect(reverse('emergencycontact_add'))
 
         if self.contact_duplicate(request.POST.get('email')):
             messages.error(request, "dup", extra_tags='duplicate_contact')
-            return HttpResponseRedirect(reverse('add_emergency_contact'))
+            return HttpResponseRedirect(reverse('emergencycontact_add'))
 
         return super().post(request, *args, **kwargs)
 

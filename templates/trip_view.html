@@ -3,7 +3,19 @@
 
 {% block content %}
 
-    <br><h1>Scheduled trips</h1><br>
+    <br>
+    <div class="row">
+        <div class="col-md-6 mb-0">
+            <h1>Scheduled trips</h1>
+        </div>
+        <div class="col-md-6 mb-0" >
+            <a href="{% url 'trip_create' %}" class="btn btn-info btn-md mr-1 float-right" \
+                        role="button" aria-pressed="true">
+                        Create Trip
+            </a>
+        </div>
+    </div>
+    <br>
 
     <!-- Trip table -->
 

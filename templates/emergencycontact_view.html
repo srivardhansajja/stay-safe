@@ -3,7 +3,19 @@
 
 {% block content %}
 
-    <br><h1>Emergency Contacts</h1><br>
+    <br>
+    <div class="row">
+        <div class="col-md-6 mb-0">
+            <h1>Emergency Contacts</h1>
+        </div>
+        <div class="col-md-6 mb-0" >
+            <a href="{% url 'emergencycontact_add' %}" class="btn btn-info btn-md mr-1 float-right" \
+                role="button" aria-pressed="true">
+                Create contact
+            </a> 
+        </div>
+    </div>
+    <br>
 
     <!-- Emergency Contacts table -->
 
