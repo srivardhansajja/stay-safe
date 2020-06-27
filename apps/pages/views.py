@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
-from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm
+from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact
 
 
@@ -130,3 +130,9 @@ class EmergencyContactPageView(LoginRequiredMixin, ListView):
 
     def get_query_set(self):
         return self.EmergencyContact.objects.filter(user=self.request.user)
+
+class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):
+    model = EmergencyContact
+    form_class = EmergencyContactUpdateForm
+    template_name = 'emergencycontact_update.html'
+    success_url = reverse_lazy('emergencycontact_view')

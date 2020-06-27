@@ -41,12 +41,19 @@ urlpatterns = [
         name='add_emergency_contact',
     ),
 
+    # View emergency contacts
     path(
         'emergencycontacts/',
         views.EmergencyContactPageView.as_view(),
         name='emergencycontact_view',
     ),
-
+    
+    # Update emergency contacts
+    path(
+        'emergencycontacts/<int:pk>/edit',
+        views.EmergencyContactUpdateView.as_view(),
+        name='emergencycontact_edit'
+    ),
 
     # Password Reset
     path(

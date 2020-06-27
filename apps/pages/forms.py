@@ -86,3 +86,13 @@ class EmergencyContactForm(forms.ModelForm):
             'last_name',
             'email',
         ]
+
+# Form to update emergency contact information
+class EmergencyContactUpdateForm(forms.ModelForm):
+    class Meta:
+        model = EmergencyContact
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+        ]

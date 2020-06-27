@@ -26,7 +26,7 @@
                 <td>{{ contact.last_name }}</td>
                 <td class="col-2">{{ contact.email }}</td>
                 <td>
-                    <a href="" class="btn btn-outline-info btn-md" \
+                    <a href="{% url 'emergencycontact_edit' contact.pk %}" class="btn btn-outline-info btn-md" \
                         role="button" aria-pressed="true">
                         Edit
                     </a>
