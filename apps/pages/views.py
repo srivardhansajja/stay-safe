@@ -7,12 +7,12 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
-from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm
+from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact
 
 
 #  Render the homepage
-class HomePageView(LoginRequiredMixin, TemplateView):
+class HomePageView(TemplateView):
     template_name = 'home.html'
 
 
@@ -93,7 +93,7 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
-    template_name = 'add_emergency_contact.html'
+    template_name = 'emergencycontact_add.html'
     form_class = EmergencyContactForm
     success_url = reverse_lazy('home')
     login_url = '/accounts/login/'
@@ -111,14 +111,36 @@ class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         if self.contact_count() >= 5:
             messages.error(request, "max", extra_tags='max_contacts')
-            return HttpResponseRedirect(reverse('add_emergency_contact'))
+            return HttpResponseRedirect(reverse('emergencycontact_add'))
 
         if self.contact_duplicate(request.POST.get('email')):
             messages.error(request, "dup", extra_tags='duplicate_contact')
-            return HttpResponseRedirect(reverse('add_emergency_contact'))
+            return HttpResponseRedirect(reverse('emergencycontact_add'))
 
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+class EmergencyContactPageView(LoginRequiredMixin, ListView):
+    model = EmergencyContact
+    template_name = 'emergencycontact_view.html'
+    fields = '__all__'
+    login_url = '/accounts/login/'
+    context_object_name = 'emergency_contacts'
+
+    def get_query_set(self):
+        return self.EmergencyContact.objects.filter(user=self.request.user)
+
+class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):
+    model = EmergencyContact
+    form_class = EmergencyContactUpdateForm
+    template_name = 'emergencycontact_update.html'
+    success_url = reverse_lazy('emergencycontact_view')
+
+class EmergencyContactDeleteView(LoginRequiredMixin, DeleteView):
+    model = EmergencyContact
+    template_name = 'emergencycontact_delete.html'
+    success_url = reverse_lazy('emergencycontact_view')

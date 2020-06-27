@@ -16,22 +16,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-10">
-                    <a href="{% url 'trip_create' %}" class="btn btn-info btn-md mr-1" \
-                        role="button" aria-pressed="true">
-                        Create Trip
-                    </a>
 
-                    <!-- View a trip -->
-                    <a href="{% url 'trip_list' %}" class="btn btn-outline-info btn-md mr-1" \
+                    <!-- View trips -->
+                    <a href="{% url 'trip_list' %}" class="btn btn-info btn-md mr-1" \
                         role="button" aria-pressed="true">
-                        View Trips
+                        Trips
                     </a> 
         
-                    <!-- Set emergency contact details -->
-                    <a href="{% url 'add_emergency_contact' %}" class="btn btn-outline-secondary btn-md mr-1" \
+                    <!-- View emergency contacts -->
+                    <a href="{% url 'emergencycontact_view' %}" class="btn btn-secondary btn-md mr-1" \
                         role="button" aria-pressed="true">
-                        Set emergency contacts
+                        Emergency contacts
                     </a> 
+        
         
                 </div>
                 <div class="col-md-2">
@@ -50,6 +47,15 @@
     {% else %}
         <br><b><h1>Welcome to Stay Safe!</b></h1>
         <h5>Log in or sign up to create and view your trips</h5>
+        <br>
+        <h7>
+            Everyone knows they should notify a friend or family member about their trip plans 
+            in case of an emergency. But this can often be easy to forget or burdensome. 'Stay Safe' 
+            allows you to automatically notify an emergency contact if you have not returned from 
+            your trip safely. Simply open the app and enter the start and end dates of your trip. 
+            At the end of your trip, 'Stay Safe' checks if you have returned safely. If no response 
+            is heard, 'Stay Safe' will notify your emergency contacts with your trip details
+        </h7>
         
     {% endif %}
 {% endblock %}
