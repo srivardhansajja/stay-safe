@@ -55,6 +55,13 @@ urlpatterns = [
         name='emergencycontact_edit'
     ),
 
+    # Delete emergency contacts
+    path(
+        'emergencycontacts/<int:pk>/delete',
+        views.EmergencyContactDeleteView.as_view(),
+        name='emergencycontact_delete'
+    ),
+
     # Password Reset
     path(
         'password_reset/',

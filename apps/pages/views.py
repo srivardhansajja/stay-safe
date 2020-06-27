@@ -136,3 +136,8 @@ class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):
     form_class = EmergencyContactUpdateForm
     template_name = 'emergencycontact_update.html'
     success_url = reverse_lazy('emergencycontact_view')
+
+class EmergencyContactDeleteView(LoginRequiredMixin, DeleteView):
+    model = EmergencyContact
+    template_name = 'emergencycontact_delete.html'
+    success_url = reverse_lazy('emergencycontact_view')

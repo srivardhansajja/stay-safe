@@ -24,17 +24,17 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ contact.first_name }}</td>
                 <td>{{ contact.last_name }}</td>
-                <td class="col-2">{{ contact.email }}</td>
+                <td>{{ contact.email }}</td>
                 <td>
                     <a href="{% url 'emergencycontact_edit' contact.pk %}" class="btn btn-outline-info btn-md" \
                         role="button" aria-pressed="true">
-                        Edit
+                        Edit contact
                     </a>
                 </td>
                 <td>
-                    <a href="" class="btn btn-outline-danger btn-md" \
+                    <a href="{% url 'emergencycontact_delete' contact.pk %}" class="btn btn-outline-danger btn-md" \
                         role="button" aria-pressed="true">
-                        Delete
+                        Delete contact
                     </a>
                 </td>
             </tr>
