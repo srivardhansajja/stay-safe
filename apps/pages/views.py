@@ -32,18 +32,21 @@ class TripPageView(LoginRequiredMixin, ListView):
             'all': Trip.objects.filter(
                 trip_owner=self.request.user
             ).order_by('trip_start'),
+
             # In Progress
             'in_progress': Trip.objects.filter(
                 trip_owner=self.request.user,
                 trip_start__lte=now,
                 trip_end__gt=now
             ).order_by('trip_start'),
+
             # Upcoming
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
                 trip_start__gt=now,
                 trip_start__lte=(now + timedelta(7))
             ).order_by('trip_start'),
+
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
@@ -131,11 +134,13 @@ class EmergencyContactPageView(LoginRequiredMixin, ListView):
     def get_query_set(self):
         return self.EmergencyContact.objects.filter(user=self.request.user)
 
+
 class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):
     model = EmergencyContact
     form_class = EmergencyContactUpdateForm
     template_name = 'emergencycontact_update.html'
     success_url = reverse_lazy('emergencycontact_view')
+
 
 class EmergencyContactDeleteView(LoginRequiredMixin, DeleteView):
     model = EmergencyContact
