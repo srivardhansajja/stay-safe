@@ -2,6 +2,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import authenticate
 from apps.accounts.models import CustomAccount
+from django.contrib.messages import get_messages
 from django.contrib import auth
 
 
@@ -21,7 +22,8 @@ class TestUserLogin(TestCase):
             username='TEST_USER',
             password='TEST_PASSWORD',
             email='TEST_EMAIL@EMAIL.COM',
-            emergency_email='EMERGENCY_EMAIL@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME',
             is_active=True,
         )
         cls.test_user.set_password(cls.test_user.password)
@@ -79,51 +81,27 @@ class TestHomePageView(TestUserLogin):
     '''
     def test_http_request_status_code_logged_out(self):
         '''
-        Test: Successful HTTP request status code
+        Test: Logged out users accessing the homepage URL are presented
+              with the intended content from the home and base templates.
         '''
         self.client.logout()
         response = self.client.get('')
         self.assertEqual(response.status_code, 200)
-
-    def test_rendered_template_logged_out(self):
-        '''
-        Test: Intended templates are rendered
-        '''
-        self.client.logout()
-        response = self.client.get('')
         self.assertTemplateUsed(response, 'home.html')
         self.assertTemplateUsed(response, '_base.html')
-
-    def test_html_contents_logged_out(self):
-        '''
-        Test: The view renders the intended html content
-        '''
-        self.client.logout()
-        response = self.client.get('')
-        self.assertContains(response, 'You are not logged in', html=True)
+        self.assertContains(response, 'Welcome to Stay Safe!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_http_request_status_code_logged_in(self):
         '''
-        Test: Successful HTTP request status code
+        Test: Logged in users accessing the homepage URL are presented
+              with the intended content from the home and base templates.
         '''
         response = self.client.get('')
         self.assertEqual(response.status_code, 200)
-
-    def test_rendered_template_logged_in(self):
-        '''
-        Test: Intended templates are rendered
-        '''
-        response = self.client.get('')
         self.assertTemplateUsed(response, 'home.html')
         self.assertTemplateUsed(response, '_base.html')
-
-    def test_html_contents_logged_in(self):
-        '''
-        Test: Intended html content is rendered
-        '''
-        response = self.client.get('')
-        self.assertContains(response, 'Welcome TEST_USER!', html=True)
+        self.assertContains(response, 'Welcome, TEST_FIRST_NAME!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -163,7 +141,7 @@ class TestTripPageView(TestUserLogin):
         Test: Intended html content is rendered
         '''
         response = self.client.get('/trips/')
-        self.assertContains(response, 'Scheduled Trips', html=True)
+        self.assertContains(response, 'Scheduled trips', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -203,7 +181,7 @@ class TestTripCreateView(TestUserLogin):
         Test: Intended html content is rendered
         '''
         response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        self.assertContains(response, 'Create a new trip', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
 
@@ -278,22 +256,177 @@ class TestPasswordResetView(TestUserLogin):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/password_reset/')
+        self.assertContains(response, 'Password Reset', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_password_reset_done_html_contents(self):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/password_reset/done/')
+        self.assertContains(response, 'Reset email sent!', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
 
     def test_password_reset_complete_html_contents(self):
         '''
         Test: Intended html content is rendered
         '''
-        response = self.client.get('/trips/add/')
-        self.assertContains(response, 'Create a Trip', html=True)
+        response = self.client.get('/reset/done/')
+        self.assertContains(response, 'Password reset complete', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+
+#
+#  Add Emergency Contact Unit Tests
+#  ---------------------------------------------------------------------------
+class TestEmergencyContactCreateView(TestUserLogin):
+    '''
+    Test Case: EmergencyContactCreateView in apps/pages/views.py
+    '''
+    def test_logout_redirect(self):
+        '''
+        Test: Logged-out users attempting to access restricted URLs are
+              redirected to the login page.
+        '''
+        self.client.logout()
+        response = self.client.get('/emergencycontacts/')
+        self.assertRedirects(
+            response, '/accounts/login/?next=/emergencycontacts/'
+        )
+
+    def test_http_request_status_code(self):
+        '''
+        Test: Logged in users accessing the homepage URL are presented
+              with the intended content from the emergency contact templates.
+        '''
+        response = self.client.get('/emergencycontacts/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'emergencycontact_view.html')
+        self.assertTemplateUsed(response, '_base.html')
+        self.assertContains(response, 'Emergency Contacts', html=True)
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+    def test_max_emergency_contact_redirect(self):
+        '''
+        Test: Adding more than 5 emergency contacts is not allowed
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'TWO__@EMAIL.COM',
+            'THREE@EMAIL.COM',
+            'FOUR_@EMAIL.COM',
+            'FIVE_@EMAIL.COM',
+        ]
+
+        # Create 5 emergency contacts by posting to the form
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/emergencycontact/add/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check if there are 5 emergency contacts
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Add a sixth emergency contact
+        response = self.client.post(
+            '/emergencycontact/add/',
+            {
+                'first_name': 'SIX',
+                'last_name': 'SIX',
+                'email': 'SIX@EMAIL.COM'
+            }
+        )
+
+        # Check for an error message
+        message_list = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(
+            str(message_list[0]),
+            'max'
+        )
+
+        # Check if there are still 5 emergency contacts
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Check whether a redirect to the form occurred
+        self.assertEqual(response.status_code, 302)
+
+    def test_max_emergency_contact_unique(self):
+        '''
+        Test: Adding the same emergency contact email is not allowed
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'ONE__@EMAIL.COM',
+        ]
+
+        # Add two emergency contacts with the same email
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/emergencycontact/add/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check that there is only one emergency contact (second not added)
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 1)
+
+        # Check for an error message (labeled 'dup' in pages/views.py)
+        message_list = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(
+            str(message_list[0]),
+            'dup'
+        )
+
+        # Check whether a redirect to the form occurred
+        self.assertEqual(response.status_code, 302)
+
+        # Check whether another user can add the same emergency contact
+        test_user_2 = CustomAccount.objects.create(
+            username='TEST_USER_TWO',
+            password='TEST_PASSWORD',
+            email='TEST_EMAIL_TWO@EMAIL.COM',
+            first_name='TEST_FIRST_NAME',
+            last_name='TEST_LAST_NAME',
+            is_active=True,
+        )
+        # Login the second test user
+        test_user_2.set_password(test_user_2.password)
+        test_user_2.save()
+        client_2 = Client()
+        client_2.login(username='TEST_USER_TWO', password='TEST_PASSWORD')
+        authenticate(username='TEST_USER_TWO', password='TEST_PASSWORD')
+
+        # Assign the second test user the same emergency contact as the first
+        for addr in CONTACTS_EMAILS:
+            response = client_2.post(
+                '/emergencycontact/add/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+
+        # Check that there is one emergency contact added for the second user
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 1)
+
+        # Check that the emergency contact for both test users is the same
+        self.assertEqual(
+            self.test_user.emergency_contacts.values('email')[0],
+            test_user_2.emergency_contacts.values('email')[0]
+        )
+
+        # Logout the second test user
+        client_2.logout()
+        test_user_2.delete()

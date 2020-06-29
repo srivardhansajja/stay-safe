@@ -150,4 +150,14 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-django_heroku.settings(locals())
+#  Import django_heroku settings with test_runner=False
+#
+#  test_runner=False:
+#      Disables the Heroku CI test runner.
+#
+#   Why?
+#      The django-heroku package sets its own test runner which
+#      creates a testing environment for Heroku CI. This testing
+#      environment is not compatable with travis CI, which uses
+#      its own test runner. So, we disable the heroku test runner.
+django_heroku.settings(locals(), test_runner=False)
