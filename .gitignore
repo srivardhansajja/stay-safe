@@ -5,5 +5,4 @@ __pycache__/
 venv/
 *.sqlite3
 .idea/
-**/migrations/
 **/staticfiles/
