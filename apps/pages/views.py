@@ -42,7 +42,7 @@ class TripPageView(LoginRequiredMixin, ListView):
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
                 trip_start__gt=now,
-                trip_end__lte=(now + timedelta(7))
+                trip_start__lte=(now + timedelta(7))
             ).order_by('trip_start'),
             # Past
             'past': Trip.objects.filter(
