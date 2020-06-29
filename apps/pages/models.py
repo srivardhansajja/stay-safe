@@ -20,7 +20,7 @@ class Trip(models.Model):
     trip_name = models.CharField(max_length=30)
     trip_start = models.DateTimeField()
     trip_end = models.DateTimeField()
-    trip_status = models.CharField(max_length=5,
+    trip_status = models.CharField(max_length=30,
                 choices=[(tag, tag.value) for tag in TripStatusList_])
 
     def __str__(self):
