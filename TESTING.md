@@ -72,7 +72,7 @@
 
 ## Test Cases:
 
-#### Test 1: [TestUserLogin] and [TestHomePageView] in apps/pages/tests/test\_views.py
+#### Test 1:
 
 - **Use case name:** 
 
@@ -96,9 +96,7 @@
 
 - **Test Steps:** 
 
-    - Navigate to the login page and click the signup button.
-    - Provide a valid username, password, email, firstname, and last name.
-    - Navigate back to the login page.
+    - Navigate to the login page.
     - Provide the username and password given when signing up.
     - Click the login button.
 
@@ -124,15 +122,19 @@
 
     - These tests use assertTemplateUsed(), which checks if a template is used when rendering a response.
     - assertTemplateUsed() requires django to collect static files for deployment.
-
-
+    - View the test code for this case at: apps/pages/tests/test\_views.py
+        
+        - class TestUserLogin
+        - class TestHomePageView
+   
+ 
 - **Post-conditions:** 
 
     - User's account object is created in the database and contains fields given during sign up.
     - User's account object has authentication status set to True.
 
 
-#### Test 2: [TestEmergencyContactCreateView] in apps/pages/tests/test\_views.py
+#### Test 2:
 
 - **Use case name:** 
 
@@ -185,7 +187,10 @@
 - **Notes:** 
 
     - These tests require django to collect static files for deployment in staticfiles/
+    - View the test code for this case at: apps/pages/tests/test\_views.py
         
+        - class TestEmergencyContactCreateView 
+
 
 - **Post-conditions:** 
 
@@ -193,7 +198,7 @@
     - The sixth emergency contact is not associated with the users account and does not exist in the database.
 
 
-#### Test 3: [TestTripModelFields] in apps/pages/tests/test\_models.py
+#### Test 3:
 
 - **Use case name:** 
 
@@ -254,21 +259,23 @@
             
             `(venv)$ python manage.py shell`
             
-            `(venv)$ from apps.accounts.models import CustomAccount`
+            `>>> from apps.accounts.models import CustomAccount`
             
-            `(venv)$ user = CustomAccount.objects.get(pk=1)`
+            `>>> user = CustomAccount.objects.get(pk=1)`
 
-            `(venv)$ len(user.trips.all())`
+            `>>> len(user.trips.all())`
 
-            `(venv)$ user.trips.all()[0].trip_name`
+            `>>> user.trips.all()[0].trip_name`
 
-            `(venv)$ user.trips.all()[0].trip_location`
-
-            `...`
+            `>>> user.trips.all()[0].trip_location`
 
     - The result should be: 
         - The user has one trip associated with their account.
         - The trip has the expected fields created during the test steps, e.g. trip_name, trip_location.
+
+    - View the test code for this case at: apps/pages/tests/test\_views.py
+
+        - TestTripModelFields
 
 
 - **Post-conditions:** 
