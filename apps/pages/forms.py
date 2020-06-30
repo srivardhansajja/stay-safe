@@ -59,56 +59,8 @@ class TripCreateForm(forms.ModelForm):
         return self.cleaned_data
 
 
-# Form used to update trips
-class TripUpdateForm(TripCreateForm):
-    class Meta:
-        model = Trip
-        fields = [
-            'trip_location',
-            'trip_name',
-            'trip_start',
-            'trip_end',
-        ]
-
-        labels = {
-            'trip_name': 'Trip name/alias',
-            'trip_location': 'Location',
-        }
-
-    trip_start = forms.DateTimeField(
-        label='Start date',
-        required=True,
-        input_formats=['%Y-%m-%dT%H:%M'],
-        widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
-            attrs={'type': 'datetime-local'}
-        )
-    )
-
-    trip_end = forms.DateTimeField(
-        label='End date',
-        required=True,
-        input_formats=['%Y-%m-%dT%H:%M'],
-        widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
-            attrs={'type': 'datetime-local'}
-        )
-    )
-
-
 # Form to add emergency contact information
 class EmergencyContactForm(forms.ModelForm):
-    class Meta:
-        model = EmergencyContact
-        fields = [
-            'first_name',
-            'last_name',
-            'email',
-        ]
-
-
-# Form to update emergency contact information
-class EmergencyContactUpdateForm(forms.ModelForm):
     class Meta:
         model = EmergencyContact
         fields = [
