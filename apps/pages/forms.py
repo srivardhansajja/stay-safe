@@ -24,7 +24,7 @@ class TripCreateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         ),
     )
@@ -34,7 +34,7 @@ class TripCreateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         )
     )
