@@ -138,8 +138,8 @@ class EmergencyContactPageView(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/'
     context_object_name = 'emergency_contacts'
 
-    def get_query_set(self):
-        return self.EmergencyContact.objects.filter(user=self.request.user)
+    def get_queryset(self):
+        return EmergencyContact.objects.filter(user=self.request.user)
 
 
 class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):
