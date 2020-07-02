@@ -19,6 +19,10 @@
 
     <!-- Trip table -->
 
+    {% if not trips.all.count %}
+        <h6>You have no trips.  Click "Create Trip" to start your adventure!</h6>
+    {% endif %}
+
     {% if trips.in_progress.count > 0 %}
     <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample">
         <div class="card">
