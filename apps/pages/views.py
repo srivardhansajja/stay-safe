@@ -7,8 +7,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
-from .forms import TripCreateForm, TripUpdateForm, EmergencyContactForm, EmergencyContactUpdateForm
-from .models import Trip, EmergencyContact
+from .forms import TripCreateForm, TripUpdateForm
+from .forms import EmergencyContactForm, EmergencyContactUpdateForm
+from .models import Trip, EmergencyContact, TripStatusList_
 
 
 #  Render the homepage
@@ -53,15 +54,22 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trip_end__lt=now
             ).order_by('trip_start')
         }
+
         # Update trip status for each query
         for key, val in queryset.items():
             trips_set = queryset[key]
             if key == 'in_progress':
-                trips_set.update(trip_status="In progress")
+                trips_set.update(
+                    trip_status=TripStatusList_.IP.value
+                )
             if key == 'upcoming':
-                trips_set.update(trip_status="Yet to start")
+                trips_set.update(
+                    trip_status=TripStatusList_.YTS.value
+                )
             if key == 'past':
-                trips_set.update(trip_status="Completed")
+                trips_set.update(
+                    trip_status=TripStatusList_.CP.value
+                )
         return queryset
 
 
@@ -131,8 +139,8 @@ class EmergencyContactPageView(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/'
     context_object_name = 'emergency_contacts'
 
-    def get_query_set(self):
-        return self.EmergencyContact.objects.filter(user=self.request.user)
+    def get_queryset(self):
+        return EmergencyContact.objects.filter(user=self.request.user)
 
 
 class EmergencyContactUpdateView(LoginRequiredMixin, UpdateView):

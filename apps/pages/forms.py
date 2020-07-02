@@ -24,7 +24,7 @@ class TripCreateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         )
     )
@@ -34,10 +34,29 @@ class TripCreateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         )
     )
+
+    # Validate form fields
+    def clean(self):
+        form_data = super().clean()
+        trip_start = form_data.get('trip_start')
+        trip_end = form_data.get('trip_end')
+
+        # Raise an error if trip_start > trip_end
+        if trip_start > trip_end:
+            self.add_error(
+                'trip_start',
+                'Error: Start date must be before end date'
+            )
+            self.add_error(
+                'trip_end',
+                'Error: End date must be after start date.'
+            )
+            raise forms.ValidationError('invalid')
+        return self.cleaned_data
 
 
 # Form used to update trips
@@ -61,7 +80,7 @@ class TripUpdateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         )
     )
@@ -71,10 +90,29 @@ class TripUpdateForm(forms.ModelForm):
         required=True,
         input_formats=['%Y-%m-%dT%H:%M'],
         widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M',
+            format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'}
         )
     )
+
+    # Validate form fields
+    def clean(self):
+        form_data = super().clean()
+        trip_start = form_data.get('trip_start')
+        trip_end = form_data.get('trip_end')
+
+        # Raise an error if trip_start > trip_end
+        if trip_start > trip_end:
+            self.add_error(
+                'trip_start',
+                'Error: Start date must be before end date'
+            )
+            self.add_error(
+                'trip_end',
+                'Error: End date must be after start date.'
+            )
+            raise forms.ValidationError('invalid')
+        return self.cleaned_data
 
 
 # Form to add emergency contact information
@@ -86,6 +124,7 @@ class EmergencyContactForm(forms.ModelForm):
             'last_name',
             'email',
         ]
+
 
 # Form to update emergency contact information
 class EmergencyContactUpdateForm(forms.ModelForm):
