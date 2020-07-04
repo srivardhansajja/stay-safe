@@ -187,6 +187,134 @@ class TestTripCreateView(TestUserLogin):
 
 
 #
+#  Update Trip Unit Tests
+#  ---------------------------------------------------------------------------
+class TestTripUpdateView(TestUserLogin):
+    '''
+    Test Case: TripUpdateView in apps/pages/views.py
+    '''
+    def test_update_trip(self):
+        '''
+        Test: Updating a trip changes the trip's information
+        '''
+        trips = [
+            ('NAME_1', 'LOC_1', '2020-07-15T10:00', '2020-07-16T10:00'),
+            ('NAME_2', 'LOC_2', '2020-08-15T10:00', '2020-08-16T10:00'),
+            ('NAME_3', 'LOC_3', '2020-09-15T10:00', '2020-09-16T10:00'),
+            ('NAME_4', 'LOC_4', '2020-10-15T10:00', '2020-10-16T10:00'),
+            ('NAME_5', 'LOC_5', '2020-11-15T10:00', '2020-11-16T10:00')
+        ]
+
+        # Create 5 trips by posting to the form
+        for trip in trips:
+            self.client.post(
+                '/trips/add/',
+                {
+                    'trip_name': trip[0],
+                    'trip_location': trip[1],
+                    'trip_start': trip[2],
+                    'trip_end': trip[3]
+                }
+            )
+        self.assertEqual(len(self.test_user.trips.all()), 5)
+
+        # Select a trip to update
+        selected_trip = self.test_user.trips.get(
+            trip_name__exact=trip[0]
+        )
+
+        # Verify the selected trip has the expected fields
+        self.assertEqual(selected_trip.trip_name, 'NAME_5')
+        self.assertEqual(selected_trip.trip_location, 'LOC_5')
+        self.assertEqual(selected_trip.trip_start.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-11-15T10:00')
+        self.assertEqual(selected_trip.trip_end.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-11-16T10:00')
+
+        # Update the selected trip information
+        edit_trip_url = self.client.get(reverse(
+            "trip_edit", kwargs={"pk": selected_trip.pk}
+        )).request['PATH_INFO']
+        self.client.post(
+            edit_trip_url,
+            {
+                'trip_location': 'Boulder',
+                'trip_name': 'Hiking',
+                'trip_start': '2020-12-15T10:00',
+                'trip_end': '2020-12-16T10:00'
+            }
+        )
+
+        # Verify the trip information has been updated
+        selected_trip = self.test_user.trips.get(
+            pk=selected_trip.pk
+        )
+        self.assertEqual(selected_trip.trip_name, 'Hiking')
+        self.assertEqual(selected_trip.trip_location, 'Boulder')
+        self.assertEqual(selected_trip.trip_start.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-12-15T10:00')
+        self.assertEqual(selected_trip.trip_end.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-12-16T10:00')
+
+
+#
+#  Delete Trip Unit Tests
+#  ---------------------------------------------------------------------------
+class TestTripDeleteView(TestUserLogin):
+    '''
+    Test Case: TripDeleteView in apps/pages/views.py
+    '''
+    def test_delete_trip(self):
+        '''
+        Test: Delete trip removes it from the database
+        '''
+        trips = [
+            ('NAME_1', 'LOC_1', '2020-07-15T10:00', '2020-07-16T10:00'),
+            ('NAME_2', 'LOC_2', '2020-08-15T10:00', '2020-08-16T10:00'),
+            ('NAME_3', 'LOC_3', '2020-09-15T10:00', '2020-09-16T10:00'),
+            ('NAME_4', 'LOC_4', '2020-10-15T10:00', '2020-10-16T10:00'),
+            ('NAME_5', 'LOC_5', '2020-11-15T10:00', '2020-11-16T10:00')
+        ]
+
+        # Create 5 trips by posting to the form
+        for trip in trips:
+            self.client.post(
+                '/trips/add/',
+                {
+                    'trip_name': trip[0],
+                    'trip_location': trip[1],
+                    'trip_start': trip[2],
+                    'trip_end': trip[3]
+                }
+            )
+        self.assertEqual(len(self.test_user.trips.all()), 5)
+
+        # Select an trip to delete
+        selected_trip = self.test_user.trips.get(
+            trip_name__exact=trip[0]
+        )
+
+        # Navigate to delete the trip
+        delete_trip_url = self.client.get(reverse(
+            "trip_delete", kwargs={"pk": selected_trip.pk}
+        )).request['PATH_INFO']
+        response = self.client.get(delete_trip_url)
+
+        # Check that the delete trip prompt is displayed
+        self.assertContains(
+            response,
+            'Delete your trip',
+            html=True
+        )
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+        # Post 'Delete Trip' and check if the trip is deleted
+        self.client.post(delete_trip_url, {'submit': 'Delete Trip'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(self.test_user.trips.all()), 4)
+
+
+#
 #  Password Reset Unit Tests
 #  ---------------------------------------------------------------------------
 class TestPasswordResetView(TestUserLogin):
