@@ -23,8 +23,77 @@
         <h6>You have no trips.  Click "Create Trip" to start your adventure!</h6>
     {% endif %}
 
+
+    {% if trips.awaiting_response.count > 0 %}
+    <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample4">
+        <div class="card">
+            <div class="card-header" id="headingFour">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-info" type="button" data-toggle="collapse"
+                            data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        <b>Awaiting Response</b>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseFour" class="collapse show" aria-labelledby="headingFour"
+                 data-parent="#accordionExample4">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Trip</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        {% for trip in trips.awaiting_response %}
+                            <tbody>
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ trip.trip_name }}</td>
+                                <td>{{ trip.trip_location }}</td>
+                                <td>{{ trip.trip_start }}</td>
+                                <td>{{ trip.trip_end }}</td>
+                                <td>{{ trip.trip_status }}</td>
+                                <td>
+                                    <a href="" class="btn btn-outline-success btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Mark as completed
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'trip_edit' trip.pk %}" class="btn btn-outline-info btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Edit Trip
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'trip_delete' trip.pk %}" class="btn btn-outline-danger btn-md" \
+                                       role="button" aria-pressed="true">
+                                        Delete Trip
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% endif %}
+
+
+
     {% if trips.in_progress.count > 0 %}
-    <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample">
+    <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample3">
         <div class="card">
             <div class="card-header" id="headingThree">
                 <h2 class="mb-0">
@@ -140,7 +209,7 @@
     <br>
     {% endif %}
     {% if trips.past.count > 0 %}
-    <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample3">
+    <div class="accordion" style="border-bottom: 3px solid #5bc0de;" id="accordionExample">
         <div class="card">
             <div class="card-header" id="headingTwo">
                 <h2 class="mb-0">

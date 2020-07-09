@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='trip',
             name='trip_status',
-            field=models.CharField(choices=[(apps.pages.models.TripStatusList_['YTS'], 'Yet to start'), (apps.pages.models.TripStatusList_['IP'], 'In progress'), (apps.pages.models.TripStatusList_['CP'], 'Completed'), (apps.pages.models.TripStatusList_['ENS'], 'Emergency notification sent')], max_length=30),
+            field=models.CharField(choices=[(apps.pages.models.TripStatusList_['YTS'], 'Yet to start'), (apps.pages.models.TripStatusList_['IP'], 'In progress'), (apps.pages.models.TripStatusList_['CP'], 'Completed'), (apps.pages.models.TripStatusList_['AR'], 'Awaiting response')], max_length=30),
         ),
     ]
