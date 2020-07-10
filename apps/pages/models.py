@@ -9,7 +9,7 @@ class TripStatusList_(Enum):
     YTS = "Yet to start"
     IP = "In progress"
     CP = "Completed"
-    ENS = "Emergency notification sent"
+    AR = "Awaiting response"
 
 
 class Trip(models.Model):

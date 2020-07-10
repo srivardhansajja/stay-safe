@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('trip_name', models.CharField(max_length=30)),
                 ('trip_start', models.DateTimeField()),
                 ('trip_end', models.DateTimeField()),
-                ('trip_status', models.CharField(choices=[(apps.pages.models.TripStatusList_['YTS'], 'Yet to start'), (apps.pages.models.TripStatusList_['IP'], 'In progress'), (apps.pages.models.TripStatusList_['CP'], 'Completed'), (apps.pages.models.TripStatusList_['ENS'], 'Emergency notification sent')], max_length=5)),
+                ('trip_status', models.CharField(choices=[(apps.pages.models.TripStatusList_['YTS'], 'Yet to start'), (apps.pages.models.TripStatusList_['IP'], 'In progress'), (apps.pages.models.TripStatusList_['CP'], 'Completed'), (apps.pages.models.TripStatusList_['AR'], 'Awaiting response')], max_length=5)),
                 ('trip_owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='trips', to=settings.AUTH_USER_MODEL)),
             ],
         ),
