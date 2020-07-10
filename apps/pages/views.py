@@ -79,7 +79,7 @@ class TripPageView(LoginRequiredMixin, ListView):
                 )
             if key == 'awaiting_response':
                 trips_set.update(
-                    trip_status=TripStatusList_.AR.value 
+                    trip_status=TripStatusList_.AR.value
                 )
         return queryset
 
