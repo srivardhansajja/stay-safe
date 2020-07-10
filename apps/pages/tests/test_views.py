@@ -3,6 +3,7 @@ from django.test import TestCase, Client
 from django.contrib.auth import authenticate
 from apps.accounts.models import CustomAccount
 from django.contrib.messages import get_messages
+from django.urls import reverse
 from django.contrib import auth
 
 
@@ -183,6 +184,134 @@ class TestTripCreateView(TestUserLogin):
         response = self.client.get('/trips/add/')
         self.assertContains(response, 'Create a new trip', html=True)
         self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+
+#
+#  Update Trip Unit Tests
+#  ---------------------------------------------------------------------------
+class TestTripUpdateView(TestUserLogin):
+    '''
+    Test Case: TripUpdateView in apps/pages/views.py
+    '''
+    def test_update_trip(self):
+        '''
+        Test: Updating a trip changes the trip's information
+        '''
+        trips = [
+            ('NAME_1', 'LOC_1', '2020-07-15T10:00', '2020-07-16T10:00'),
+            ('NAME_2', 'LOC_2', '2020-08-15T10:00', '2020-08-16T10:00'),
+            ('NAME_3', 'LOC_3', '2020-09-15T10:00', '2020-09-16T10:00'),
+            ('NAME_4', 'LOC_4', '2020-10-15T10:00', '2020-10-16T10:00'),
+            ('NAME_5', 'LOC_5', '2020-11-15T10:00', '2020-11-16T10:00')
+        ]
+
+        # Create 5 trips by posting to the form
+        for trip in trips:
+            self.client.post(
+                '/trips/add/',
+                {
+                    'trip_name': trip[0],
+                    'trip_location': trip[1],
+                    'trip_start': trip[2],
+                    'trip_end': trip[3]
+                }
+            )
+        self.assertEqual(len(self.test_user.trips.all()), 5)
+
+        # Select a trip to update
+        selected_trip = self.test_user.trips.get(
+            trip_name__exact=trip[0]
+        )
+
+        # Verify the selected trip has the expected fields
+        self.assertEqual(selected_trip.trip_name, 'NAME_5')
+        self.assertEqual(selected_trip.trip_location, 'LOC_5')
+        self.assertEqual(selected_trip.trip_start.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-11-15T10:00')
+        self.assertEqual(selected_trip.trip_end.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-11-16T10:00')
+
+        # Update the selected trip information
+        edit_trip_url = self.client.get(reverse(
+            "trip_edit", kwargs={"pk": selected_trip.pk}
+        )).request['PATH_INFO']
+        self.client.post(
+            edit_trip_url,
+            {
+                'trip_location': 'Boulder',
+                'trip_name': 'Hiking',
+                'trip_start': '2020-12-15T10:00',
+                'trip_end': '2020-12-16T10:00'
+            }
+        )
+
+        # Verify the trip information has been updated
+        selected_trip = self.test_user.trips.get(
+            pk=selected_trip.pk
+        )
+        self.assertEqual(selected_trip.trip_name, 'Hiking')
+        self.assertEqual(selected_trip.trip_location, 'Boulder')
+        self.assertEqual(selected_trip.trip_start.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-12-15T10:00')
+        self.assertEqual(selected_trip.trip_end.strftime(
+            '%Y-%m-%dT%H:%M'), '2020-12-16T10:00')
+
+
+#
+#  Delete Trip Unit Tests
+#  ---------------------------------------------------------------------------
+class TestTripDeleteView(TestUserLogin):
+    '''
+    Test Case: TripDeleteView in apps/pages/views.py
+    '''
+    def test_delete_trip(self):
+        '''
+        Test: Delete trip removes it from the database
+        '''
+        trips = [
+            ('NAME_1', 'LOC_1', '2020-07-15T10:00', '2020-07-16T10:00'),
+            ('NAME_2', 'LOC_2', '2020-08-15T10:00', '2020-08-16T10:00'),
+            ('NAME_3', 'LOC_3', '2020-09-15T10:00', '2020-09-16T10:00'),
+            ('NAME_4', 'LOC_4', '2020-10-15T10:00', '2020-10-16T10:00'),
+            ('NAME_5', 'LOC_5', '2020-11-15T10:00', '2020-11-16T10:00')
+        ]
+
+        # Create 5 trips by posting to the form
+        for trip in trips:
+            self.client.post(
+                '/trips/add/',
+                {
+                    'trip_name': trip[0],
+                    'trip_location': trip[1],
+                    'trip_start': trip[2],
+                    'trip_end': trip[3]
+                }
+            )
+        self.assertEqual(len(self.test_user.trips.all()), 5)
+
+        # Select an trip to delete
+        selected_trip = self.test_user.trips.get(
+            trip_name__exact=trip[0]
+        )
+
+        # Navigate to delete the trip
+        delete_trip_url = self.client.get(reverse(
+            "trip_delete", kwargs={"pk": selected_trip.pk}
+        )).request['PATH_INFO']
+        response = self.client.get(delete_trip_url)
+
+        # Check that the delete trip prompt is displayed
+        self.assertContains(
+            response,
+            'Delete your trip',
+            html=True
+        )
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+        # Post 'Delete Trip' and check if the trip is deleted
+        self.client.post(delete_trip_url, {'submit': 'Delete Trip'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(self.test_user.trips.all()), 4)
 
 
 #
@@ -430,3 +559,128 @@ class TestEmergencyContactCreateView(TestUserLogin):
         # Logout the second test user
         client_2.logout()
         test_user_2.delete()
+
+
+#
+#  Update Emergency Contact Unit Tests
+#  ---------------------------------------------------------------------------
+class TestEmergencyContactUpdateView(TestUserLogin):
+    '''
+    Test Case: EmergencyContactUpdateView in apps/pages/views.py
+    '''
+    def test_update_emergency_contact_information(self):
+        '''
+        Test: Updating an emergency contact changes the contact's information
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'TWO__@EMAIL.COM',
+            'THREE@EMAIL.COM',
+            'FOUR_@EMAIL.COM',
+            'FIVE_@EMAIL.COM',
+        ]
+
+        # Create 5 emergency contacts by posting to the form
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/emergencycontact/add/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Select an emergency contact
+        contact = self.test_user.emergency_contacts.get(
+            first_name__exact=addr[0:5]
+        )
+
+        # Verify the selected emergency contact has the expected fields
+        self.assertEqual(contact.first_name, 'FIVE_')
+        self.assertEqual(contact.last_name, 'F')
+        self.assertEqual(contact.email, 'FIVE_@EMAIL.COM')
+
+        # Update the selected emergency contact's information
+        edit_contact_url = self.client.get(reverse(
+            "emergencycontact_edit", kwargs={"pk": contact.pk}
+        )).request['PATH_INFO']
+        response = self.client.post(
+            edit_contact_url,
+            {
+                'first_name': 'NEW_FIRST_NAME',
+                'last_name': 'NEW_LAST_NAME',
+                'email': 'NEW_EMAIL@CONTACT.COM'
+            }
+        )
+
+        # Verify the emergency contact information has been updated
+        contact = self.test_user.emergency_contacts.get(pk=contact.pk)
+        self.assertEqual(contact.first_name, 'NEW_FIRST_NAME')
+        self.assertEqual(contact.last_name, 'NEW_LAST_NAME')
+        self.assertEqual(contact.email, 'NEW_EMAIL@CONTACT.COM')
+
+        # Check for a redirect to the view emergency contacts page
+        self.assertEqual(response.status_code, 302)
+
+        # Check that the updated emergency contact is displayed
+        response = self.client.get('/emergencycontacts/')
+        self.assertContains(response, 'NEW_FIRST_NAME', html=True)
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+
+#
+#  Delete Emergency Contact Unit Tests
+#  ---------------------------------------------------------------------------
+class TestEmergencyContactDeleteView(TestUserLogin):
+    '''
+    Test Case: EmergencyContactDeleteView in apps/pages/views.py
+    '''
+    def test_delete_emergency_contact(self):
+        '''
+        Test: Delete emergency contact removes it from view and database
+        '''
+        CONTACTS_EMAILS = [
+            'ONE__@EMAIL.COM',
+            'TWO__@EMAIL.COM',
+            'THREE@EMAIL.COM',
+            'FOUR_@EMAIL.COM',
+            'FIVE_@EMAIL.COM',
+        ]
+
+        # Create 5 emergency contacts by posting to the form
+        for addr in CONTACTS_EMAILS:
+            response = self.client.post(
+                '/emergencycontact/add/',
+                {
+                    'first_name': addr[0:5],
+                    'last_name': addr[0:1],
+                    'email': addr
+                }
+            )
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 5)
+
+        # Select an emergency contact to delete
+        contact = self.test_user.emergency_contacts.get(
+            first_name__exact=addr[0:5]
+        )
+
+        # Navigate to delete the emergency contact
+        delete_contact_url = self.client.get(reverse(
+            "emergencycontact_delete", kwargs={"pk": contact.pk}
+        )).request['PATH_INFO']
+        response = self.client.get(delete_contact_url)
+
+        # Check that the delete emergency contact prompt is displayed
+        self.assertContains(
+            response,
+            'Are you sure you want to delete this emergency contact?',
+            html=True
+        )
+        self.assertNotContains(response, 'test code goes vroooom', html=True)
+
+        # Post 'Yes' and check if the contact is deleted
+        self.client.post(delete_contact_url, {'submit': 'Yes'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(self.test_user.emergency_contacts.all()), 4)
