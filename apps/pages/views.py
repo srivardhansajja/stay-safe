@@ -54,7 +54,7 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trip_end__lt=now,
                 trip_end__gt=(now - timedelta(hours=1))
             ).order_by('trip_start'),
-            
+
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
