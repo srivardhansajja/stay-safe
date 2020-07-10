@@ -45,19 +45,20 @@ class TripPageView(LoginRequiredMixin, ListView):
             'upcoming': Trip.objects.filter(
                 trip_owner=self.request.user,
                 trip_start__gt=now,
-                trip_start__lte=(now + timedelta(7))
-            ).order_by('trip_start'),
-
-            # Past
-            'past': Trip.objects.filter(
-                trip_owner=self.request.user,
-                trip_end__lt=now
+                trip_start__lte=(now + timedelta(days=7))
             ).order_by('trip_start'),
 
             # Awaiting Response
             'awaiting_response': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_end__lt=now
+                trip_end__lt=now,
+                trip_end__gt=(now - timedelta(hours=1))
+            ).order_by('trip_start'),
+            
+            # Past
+            'past': Trip.objects.filter(
+                trip_owner=self.request.user,
+                trip_end__lt=(now - timedelta(hours=1))
             ).order_by('trip_start')
         }
 
