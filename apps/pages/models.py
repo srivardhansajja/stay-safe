@@ -13,15 +13,20 @@ class TripStatusList_(Enum):
 
 
 class Trip(models.Model):
-    trip_owner = models.ForeignKey(CustomAccount,
-                                   on_delete=models.CASCADE,
-                                   related_name='trips')
+    trip_owner = models.ForeignKey(
+        CustomAccount,
+        on_delete=models.CASCADE,
+        related_name='trips'
+    )
     trip_location = models.CharField(max_length=30)
     trip_name = models.CharField(max_length=30)
     trip_start = models.DateTimeField()
     trip_end = models.DateTimeField()
-    trip_status = models.CharField(max_length=30,
-                choices=[(tag, tag.value) for tag in TripStatusList_])
+    trip_status = models.CharField(
+        max_length=30,
+        choices=[(tag, tag.value) for tag in TripStatusList_]
+    )
+    response_sent = models.BooleanField(default=False)
 
     def __str__(self):
         return self.trip_name
