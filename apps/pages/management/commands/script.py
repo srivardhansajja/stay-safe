@@ -39,7 +39,6 @@ class Command(BaseCommand):
 
         # Complete
         if (end < now - timedelta(hours=1)):
-            print("Updated to Complete")
             trip.trip_status = TripStatusList_.CP.value
 
         # Save changes in the database
@@ -147,7 +146,6 @@ class Command(BaseCommand):
 
             # Send an email to contacts if a trip completes with no response
             if (new == "Completed" and trip.response_sent is False):
-                print("Your emergency contacts have been emailed")
                 self.send_contactEmails(trip.trip_owner, trip)
                 trip.response_sent = True
 
