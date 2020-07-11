@@ -151,3 +151,5 @@ class Command(BaseCommand):
 
             # Save changes in the database
             trip.save()
+        # Shut down the heroku scheduler
+        return
