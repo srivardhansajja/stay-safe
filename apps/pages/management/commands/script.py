@@ -10,17 +10,8 @@ class Command(BaseCommand):
     def update_status(self, trip):
         """
         Update the status of the trip object in the database.
-
-            Notes:
-                object.save() must be called to save changes to the database.
-
-            Args:
-                trip: a trip object
-
-            Returns:
-                None
         """
-        # Get the current time, trip start date, and trip end dates
+        # Get trip date information
         start = trip.trip_start
         end = trip.trip_end
         now = timezone.now()
@@ -47,13 +38,6 @@ class Command(BaseCommand):
     def send_notificationEmail(self, owner, trip):
         """
         Send an email to the trip owner when a trip is 'Awaiting response'.
-
-            Args:
-                owner: a customAccount object
-                trip:  a trip object
-
-            Returns:
-                None
         """
         # Define email fields
         n = '\n\n'
@@ -76,13 +60,6 @@ class Command(BaseCommand):
     def send_contactEmails(self, owner, trip):
         """
         Send an email to all of the trip owner's emergency contacts.
-
-            Args:
-                owner: a customAccount object
-                trip:  a trip object
-
-            Returns:
-                None
         """
         # Define email fields
         n = '\n\n'
@@ -118,16 +95,8 @@ class Command(BaseCommand):
                 (2) Email the user if a trip is "Awaiting response".
                 (3) Email emergency contacts if there is no user resopnse.
 
-            Notes:
-                The command to run the script is: python manage.py script
-                object.save() must be called to save changes to the database.
-
-            Args:
-                args:   optional arguments
-                kwargs: optional keywoard arguments
-
-            Returns:
-                None
+            The return statement at the end of the for-loop is required. It
+            lets the Heroku Scheduler know when it can shut down.
         """
         for trip in Trip.objects.all():
             # Ignore trips that have completed and sent a response to contacts
@@ -148,8 +117,5 @@ class Command(BaseCommand):
             if (new == "Completed" and trip.response_sent is False):
                 self.send_contactEmails(trip.trip_owner, trip)
                 trip.response_sent = True
-
-            # Save changes in the database
             trip.save()
-        # Shut down the heroku scheduler
         return
