@@ -31,12 +31,12 @@ class Command(BaseCommand):
             # Send an email to the user if a trip is Awaiting response
             new = trip.trip_status
             if new == "Awaiting response" and not trip.notification:
-                trip.trip_owner.send_notification_email(trip)
+                trip.send_notification_email()
                 trip.notification = True
 
             # Send an email to contacts if a trip completes with no response
             if new == "Completed" and not trip.response_sent:
-                trip.trip_owner.send_contact_emails(trip)
+                trip.send_contact_emails()
                 trip.response_sent = True
             trip.save()
         return
