@@ -62,10 +62,14 @@
                                 <td>{{ trip.trip_end }}</td>
                                 <td>{{ trip.trip_status }}</td>
                                 <td>
-                                    <a href="" class="btn btn-outline-success btn-md" \
+                                    <!-- <a href="" class="btn btn-outline-success btn-md" \
                                        role="button" aria-pressed="true">
-                                        Mark as completed
-                                    </a>
+                                        Mark complete
+                                    </a> -->
+                                    <form method="POST" action="{% url 'mark_complete' pk=trip.pk%}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-success btn-md" name="markcompletebtn">Mark complete</button>
+                                    </form>
                                 </td>
                                 <td>
                                     <a href="{% url 'trip_edit' trip.pk %}" class="btn btn-outline-info btn-md" \

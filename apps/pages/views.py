@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
@@ -10,6 +10,8 @@ from datetime import timedelta
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
+from django.db.models import F
+from django.shortcuts import render, redirect,get_object_or_404
 
 
 #  Render the homepage
@@ -51,6 +53,7 @@ class TripPageView(LoginRequiredMixin, ListView):
             # Awaiting Response
             'awaiting_response': Trip.objects.filter(
                 trip_owner=self.request.user,
+                response_sent=False,
                 trip_end__lt=now,
                 trip_end__gt=(now - timedelta(hours=1))
             ).order_by('trip_start'),
@@ -58,7 +61,8 @@ class TripPageView(LoginRequiredMixin, ListView):
             # Past
             'past': Trip.objects.filter(
                 trip_owner=self.request.user,
-                trip_end__lt=(now - timedelta(hours=1))
+                trip_end__lt=now,
+                response_sent=True,
             ).order_by('trip_start')
         }
 
@@ -73,14 +77,17 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.YTS.value
                 )
-            if key == 'past':
-                trips_set.update(
-                    trip_status=TripStatusList_.CP.value
-                )
+            
             if key == 'awaiting_response':
                 trips_set.update(
                     trip_status=TripStatusList_.AR.value
                 )
+
+            if key == 'past':
+                trips_set.update(
+                    trip_status=TripStatusList_.CP.value
+                )
+                
         return queryset
 
 
@@ -109,6 +116,13 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'trip_delete.html'
     success_url = reverse_lazy('trip_list')
 
+def mark_complete(request, pk):
+    if 'markcompletebtn' in request.POST:
+        trip_ = Trip.objects.filter(pk=pk)[0]
+        trip_.response_sent = True
+        trip_.save()
+        return redirect('trip_list')
+    return HttpResponse('Error! Please try again')
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
