@@ -38,6 +38,10 @@ urlpatterns = [
          views.mark_complete,
          name='mark_complete'
          ),
+    path('trips/emergency_mode',
+         views.emergency_mode,
+         name='emergency_mode'
+         ),
 
     # Add emergency contact
     path(

@@ -124,6 +124,11 @@ def mark_complete(request, pk):
         return redirect('trip_list')
     return HttpResponse('Error! Please try again')
 
+def emergency_mode(request):
+    if 'emergencybtn' in request.POST:
+        return redirect('home')
+    return HttpResponse('Error! Please try again')
+
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
     template_name = 'emergencycontact_add.html'
