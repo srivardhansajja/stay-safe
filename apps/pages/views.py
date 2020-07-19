@@ -87,7 +87,7 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.CP.value
                 )
-                
+
         return queryset
 
 
@@ -96,7 +96,7 @@ class TripCreateView(LoginRequiredMixin, CreateView):
     model = Trip
     template_name = 'trip_create.html'
     form_class = TripCreateForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('trip_list')
     login_url = '/accounts/login/'
 
     def form_valid(self, form):
@@ -128,7 +128,7 @@ class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact
     template_name = 'emergencycontact_add.html'
     form_class = EmergencyContactForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('emergencycontact_view')
     login_url = '/accounts/login/'
 
     # Return the number of emergency contacts associated with the user
