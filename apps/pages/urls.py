@@ -34,6 +34,15 @@ urlpatterns = [
          name='trip_delete'
          ),
 
+    path('trips/<int:pk>/mark_complete',
+         views.mark_complete,
+         name='mark_complete'
+         ),
+    path('trips/emergency_mode',
+         views.emergency_mode,
+         name='emergency_mode'
+         ),
+
     # Add emergency contact
     path(
         'emergencycontact/add/',

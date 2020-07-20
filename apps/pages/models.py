@@ -111,6 +111,35 @@ class Trip(models.Model):
                     f'-The Stay Safe Team'
             send_mail(subject, message, sender, [contact_email])
 
+    def send_emergency_emails(self):
+        """
+        Send an emergency email to all of the trip owner's emergency contacts.
+        """
+        # Define email fields
+        n = '\n\n'
+        name_list = [
+            c.first_name for c in EmergencyContact.objects.filter(user=self.trip_owner)
+        ]
+        email_list = [
+            c.email for c in EmergencyContact.objects.filter(user=self.trip_owner)
+        ]
+        end_date = self.trip_end.strftime('%l:%m%p on %b %d, %Y')
+        sender = 'staysafe3308@gmail.com'
+        subject = f'{self.trip_owner.first_name} {self.trip_owner.last_name}\'s has triggered the emergency protocol!'
+
+        # Send an email to each emergency contact
+        for contact_name, contact_email in zip(name_list, email_list):
+            message = \
+                f'Hello {contact_name},{n}' \
+                    f'{self.trip_owner.first_name} {self.trip_owner.last_name}\' has' \
+                    f'triggered the emergency protocol.{n}' \
+                    f'If you have not heard from them, consider contacting' \
+                    f' them to make sure they are safe.{n}' \
+                    f'Their email address is: {self.trip_owner.email}' \
+                    f'{n}' \
+                    f'-The Stay Safe Team'
+            send_mail(subject, message, sender, [contact_email])
+
     def __str__(self):
         return self.trip_name
 
