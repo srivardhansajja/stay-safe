@@ -1,1 +1,1 @@
-web: gunicorn _stay_safe.wsgi
+web: gunicorn _stay_safe.wsgi --log-file -
