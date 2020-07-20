@@ -10,8 +10,7 @@ from datetime import timedelta
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
-from django.db.models import F
-from django.shortcuts import render, redirect,get_object_or_404
+from django.shortcuts import redirect
 
 
 #  Render the homepage
@@ -77,7 +76,6 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.YTS.value
                 )
-            
             if key == 'awaiting_response':
                 trips_set.update(
                     trip_status=TripStatusList_.AR.value
@@ -87,7 +85,6 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.CP.value
                 )
-
         return queryset
 
 
@@ -116,6 +113,7 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'trip_delete.html'
     success_url = reverse_lazy('trip_list')
 
+
 def mark_complete(request, pk):
     if 'markcompletebtn' in request.POST:
         trip_ = Trip.objects.filter(pk=pk)[0]
@@ -124,10 +122,12 @@ def mark_complete(request, pk):
         return redirect('trip_list')
     return HttpResponse('Error! Please try again')
 
+
 def emergency_mode(request):
     if 'emergencybtn' in request.POST:
         return redirect('home')
     return HttpResponse('Error! Please try again')
+
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact

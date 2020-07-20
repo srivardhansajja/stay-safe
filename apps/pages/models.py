@@ -131,13 +131,13 @@ class Trip(models.Model):
         for contact_name, contact_email in zip(name_list, email_list):
             message = \
                 f'Hello {contact_name},{n}' \
-                    f'{self.trip_owner.first_name} {self.trip_owner.last_name}\' has' \
-                    f'triggered the emergency protocol.{n}' \
-                    f'If you have not heard from them, consider contacting' \
-                    f' them to make sure they are safe.{n}' \
-                    f'Their email address is: {self.trip_owner.email}' \
-                    f'{n}' \
-                    f'-The Stay Safe Team'
+                f'{self.trip_owner.first_name} {self.trip_owner.last_name}\' has '\
+                f'triggered their emergency protocol.{n}' \
+                f'If you have not heard from them, consider contacting' \
+                f' them to make sure they are safe.{n}' \
+                f'Their email address is: {self.trip_owner.email}' \
+                f'{n}' \
+                f'-The Stay Safe Team'
             send_mail(subject, message, sender, [contact_email])
 
     def __str__(self):
