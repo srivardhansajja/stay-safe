@@ -1,0 +1,14 @@
+<!-- templates/emergency_email.html -->
+
+<!-- Extend the base email template -->
+{% extends '_base_email.html' %}
+
+<!-- Emergency email message -->
+{% block content %}
+    <p>Hello {{ contact_name }},</p>
+    <p>{{ first_name }} {{ last_name }} has triggered the emergency protocol.</p>
+    <p>If you have not heard from them, contact them IMMEDIATELY to make sure they are safe.</p>
+    <p>Their email address is: {{ email }}</p>
+    <br>
+    <p>-The Stay Safe Team</p>
+{% endblock %}
