@@ -39,7 +39,7 @@ urlpatterns = [
          views.TripMarkCompleteView.as_view(),
          name='mark_complete'
          ),
-    
+
     # Emergency button pressed
     path('trips/emergency_mode',
          views.EmergencyButtonHomeView.as_view(),

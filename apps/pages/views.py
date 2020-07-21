@@ -12,7 +12,6 @@ from datetime import timedelta
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
-from ..accounts.models import CustomAccount
 from django.shortcuts import redirect
 from django.core.mail import send_mail
 
@@ -128,7 +127,7 @@ class TripMarkCompleteView(LoginRequiredMixin, UpdateView):
         return HttpResponse('Error! Please try again')
 
 
-class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):    
+class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         """
         Handles the HTTP POST created by pressing the emergency button
@@ -140,23 +139,28 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
 
     def send_contact_emails(self, request):
         """
-        A method that sends an emergency email to all of the user's emergency contacts.
+        A method that sends an emergency email to all of the user's
+        emergency contacts.
         """
         # Define email fields
-        n = '\n\n'
         name_list = [
-            c.first_name for c in EmergencyContact.objects.filter(user=self.request.user)
+            c.first_name for c in EmergencyContact.objects.filter(
+                user=self.request.user
+            )
         ]
         email_list = [
-            c.email for c in EmergencyContact.objects.filter(user=self.request.user)
+            c.email for c in EmergencyContact.objects.filter(
+                user=self.request.user
+            )
         ]
         sender = 'staysafe3308@gmail.com'
-        subject = f'EMERGENCY: Contact {self.request.user.first_name} {self.request.user.last_name}'
+        subject = f'EMERGENCY: Contact {self.request.user.first_name}'\
+                  f' {self.request.user.last_name}'
 
         # Send an email to each emergency contact
         for contact_name, contact_email in zip(name_list, email_list):
             HTML_message = render_to_string(
-                'emergency_email.html', 
+                'emergency_email.html',
                 {
                     'contact_name': contact_name,
                     'first_name': self.request.user.first_name,
@@ -165,7 +169,8 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
                 }
             )
             message = strip_tags(HTML_message)
-            send_mail(subject, message, sender, [contact_email], html_message=HTML_message)
+            send_mail(subject, message, sender, [contact_email],
+                      html_message=HTML_message)
 
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
