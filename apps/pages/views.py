@@ -115,14 +115,14 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'trip_delete.html'
     success_url = reverse_lazy('trip_list')
 
-
-def mark_complete(request, pk):
-    if 'markcompletebtn' in request.POST:
-        trip_ = Trip.objects.filter(pk=pk)[0]
-        trip_.response_sent = True
-        trip_.save()
-        return redirect('trip_list')
-    return HttpResponse('Error! Please try again')
+class TripMarkCompleteView(LoginRequiredMixin, UpdateView):
+    def post(self, request, pk):
+        if 'markcompletebtn' in request.POST:
+            trip_ = Trip.objects.filter(pk=pk)[0]
+            trip_.response_sent = True
+            trip_.save()
+            return redirect('trip_list')
+        return HttpResponse('Error! Please try again')
 
 class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):    
     def post(self, request, *args, **kwargs):

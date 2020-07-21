@@ -36,7 +36,7 @@ urlpatterns = [
 
     # Trip mark as complete
     path('trips/<int:pk>/mark_complete',
-         views.mark_complete,
+         views.TripMarkCompleteView.as_view(),
          name='mark_complete'
          ),
     
