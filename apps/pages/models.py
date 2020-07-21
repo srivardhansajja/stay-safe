@@ -5,6 +5,8 @@ from enum import Enum
 from datetime import timedelta
 from django.utils import timezone
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 # Class representing Trip Status, subclass of Enum
@@ -71,16 +73,18 @@ class Trip(models.Model):
         emergency_contact_date = (self.trip_end + timedelta(hours=1)).strftime(
             '%l:%m%p on %b %d, %Y'
         )
-
         # Send an email notifying the user that a trip is awaiting response
-        message = \
-            f'Hello {self.trip_owner.first_name} {self.trip_owner.last_name},{n}' \
-            f'Your trip to {self.trip_location} is awaiting your response.{n}' \
-            f'If you do not mark this trip as complete, then your emergency ' \
-            f'contacts will be notified at: {emergency_contact_date} {n}' \
-            f'{n}' \
-            f'-The Stay Safe Team'
-        send_mail(subject, message, sender, [self.trip_owner.email])
+        HTML_message = render_to_string(
+            'notification_email.html', 
+            {
+                'first_name': self.trip_owner.first_name,
+                'last_name': self.trip_owner.last_name,
+                'trip_location': self.trip_location,
+                'contact_date': emergency_contact_date,
+            }
+        )
+        message = strip_tags(HTML_message)
+        send_mail(subject, message, sender, [self.trip_owner.email], html_message=HTML_message)
 
     def send_contact_emails(self):
         """
