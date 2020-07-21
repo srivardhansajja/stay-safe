@@ -1,13 +1,14 @@
-<!-- templates/emergency_email.html -->
+<!-- templates/contact_email.html -->
 
 <!-- Extend the base email template -->
 {% extends '_base_email.html' %}
 
-<!-- Emergency email message -->
+<!-- Contacts email message -->
 {% block content %}
-    <p>Hello {{ contact_name }},</p>
-    <p>{{ first_name }} {{ last_name }} has triggered the emergency protocol.</p>
-    <p>If you have not heard from them, contact them IMMEDIATELY to make sure they are safe.</p>
+    <p>Hello {{ contact }},</p>
+    <p>{{ first_name }} {{ last_name }}'s trip to {{ trip_location }} ended 1 hour ago 
+        at {{ end_date }}.</p>
+    <p>If you have not heard from them yet, consider contacting them to make sure they are safe</p>
     <p>Their email address is: {{ email }}</p>
     <br>
     <p>-The Stay Safe Team</p>

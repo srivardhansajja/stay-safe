@@ -104,16 +104,19 @@ class Trip(models.Model):
 
         # Send an email to each emergency contact
         for contact_name, contact_email in zip(name_list, email_list):
-            message = \
-                f'Hello {contact_name},{n}' \
-                f'{self.trip_owner.first_name} {self.trip_owner.last_name}\'s trip to ' \
-                f'{self.trip_location} ended 1 hour ago at {end_date}.{n}' \
-                f'If you have not heard from them yet, consider contacting' \
-                f' them to make sure they are safe.{n}' \
-                f'Their email address is: {self.trip_owner.email}' \
-                f'{n}' \
-                f'-The Stay Safe Team'
-            send_mail(subject, message, sender, [contact_email])
+            HTML_message = render_to_string(
+                'contact_email.html', 
+                {
+                    'contact': contact_name,
+                    'first_name': self.trip_owner.first_name,
+                    'last_name': self.trip_owner.last_name,
+                    'trip_location': self.trip_location,
+                    'end_date': end_date,
+                    'email': self.trip_owner.email,
+                }
+            )
+            message = strip_tags(HTML_message)
+            send_mail(subject, message, sender, [contact_email], html_message=HTML_message)
 
     def __str__(self):
         return self.trip_name
