@@ -10,7 +10,9 @@ from datetime import timedelta
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
+from ..accounts.models import CustomAccount
 from django.shortcuts import redirect
+from django.core.mail import send_mail
 
 
 #  Render the homepage
@@ -122,12 +124,43 @@ def mark_complete(request, pk):
         return redirect('trip_list')
     return HttpResponse('Error! Please try again')
 
+class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):    
+    def post(self, request, *args, **kwargs):
+        """
+        Handles the HTTP POST created by pressing the emergency button
+        """
+        if 'emergencybtn' in request.POST:
+            self.send_contact_emails(request)
+            return redirect('home')
+        return HttpResponse('Error! Please try again')
 
-def emergency_mode(request):
-    if 'emergencybtn' in request.POST:
-        return redirect('home')
-    return HttpResponse('Error! Please try again')
+    def send_contact_emails(self, request):
+        """
+        A method that sends an emergency email to all of the user's emergency contacts.
+        """
+        # Define email fields
+        n = '\n\n'
+        name_list = [
+            c.first_name for c in EmergencyContact.objects.filter(user=self.request.user)
+        ]
+        email_list = [
+            c.email for c in EmergencyContact.objects.filter(user=self.request.user)
+        ]
+        sender = 'staysafe3308@gmail.com'
+        subject = f'EMERGENCY: Contact {self.request.user.first_name} {self.request.user.last_name}'
 
+        # Send an email to each emergency contact
+        for contact_name, contact_email in zip(name_list, email_list):
+            message = \
+                f'Hello {contact_name},{n}' \
+                f'{self.request.user.first_name} {self.request.user.last_name} has ' \
+                f'triggered the emergency protocol.{n}' \
+                f'If you have not heard from them, contact' \
+                f' them immediately to make sure they are safe.{n}' \
+                f'Their email address is: {self.request.user.email}' \
+                f'{n}' \
+                f'-The Stay Safe Team'
+            send_mail(subject, message, sender, [contact_email])
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact

@@ -42,7 +42,7 @@ urlpatterns = [
     
     # Emergency button pressed
     path('trips/emergency_mode',
-         views.emergency_mode,
+         views.EmergencyButtonHomeView.as_view(),
          name='emergency_mode'
          ),
 
