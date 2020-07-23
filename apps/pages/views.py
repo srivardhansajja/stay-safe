@@ -14,6 +14,9 @@ from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
 from django.shortcuts import redirect
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.shortcuts import render
+import json
 
 
 #  Render the homepage
@@ -127,15 +130,47 @@ class TripMarkCompleteView(LoginRequiredMixin, UpdateView):
         return HttpResponse('Error! Please try again')
 
 
-class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
+class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):            
     def post(self, request, *args, **kwargs):
         """
         Handles the HTTP POST created by pressing the emergency button
         """
-        if 'emergencybtn' in request.POST:
-            self.send_contact_emails(request)
-            return redirect('home')
-        return HttpResponse('Error! Please try again')
+        # Get current date and last date the button was pressed
+        current_date = timezone.now()
+        last_used = self.request.user.eButton_date
+        
+        # Determine whether the button can be pressed
+        button_allowed = last_used < (current_date - timedelta(minutes=1))
+        js_button_allowed = json.dumps(button_allowed)
+
+        # The button IS NOT allowed to be pressed
+        if not button_allowed:
+            print("BUTTON NOT ALLOWED:", button_allowed)
+            return render(
+                self.request,
+                "home.html", 
+                context={
+                    "button_allowed": js_button_allowed
+                }
+            )
+
+        # The button IS allowed to be pressed
+        if button_allowed and 'emergencybtn' in self.request.POST:
+            print("emergency emails being sent")
+            #self.send_contact_emails(request)
+
+            # Update when the user pressed the button in the db
+            self.request.user.eButton_date = timezone.now()
+            self.request.user.save()
+
+            # Notify the javascript if the button is allowed
+            return render(
+                self.request,
+                "home.html", 
+                context={
+                    "button_allowed": js_button_allowed
+                }
+            )
 
     def send_contact_emails(self, request):
         """

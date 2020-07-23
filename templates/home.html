@@ -5,7 +5,34 @@
     Home
 {% endblock %}
 
+{% block extrajs %}
+    <script>console.log("script on the outside");</script>
+{% endblock %}
+
 {% block content %}
+
+<script type="text/javascript">
+/* Determine (from views.py) if the button can be pressed */
+var allow = '{{ button_allowed | safe }}';
+
+/* JQuery: Disable the button if it was clicked */
+function toggle(button) {
+    /* Button Enabled */
+    if (allow == 'true')
+    {
+        button.textContent = "Contacts Notified!";
+        console.log("js has the button on", allow);
+    }
+
+    /* Button Disabled */
+    if (allow == 'false')
+    { 
+        button.textContent = "Unavailable for 24 hours";
+        console.log("js has the button off", allow);
+    }
+    button.disabled = true;
+};
+</script>
 
     <!-- User is logged on -->
     {% if user.is_authenticated %}
@@ -28,13 +55,12 @@
                         role="button" aria-pressed="true">
                         Emergency contacts
                     </a> 
-
                 </form>
 
                 <!-- Emergency Button -->
                 <form method="POST" action="{% url 'emergency_mode' %}">
                     {% csrf_token %}
-                    <button class="btn btn btn-danger btn-md" name="emergencybtn">
+                    <button class="btn btn btn-danger btn-md" name="emergencybtn" onclick="toggle(this)">
                         Emergency
                     </button>
                 </form>
