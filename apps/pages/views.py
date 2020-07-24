@@ -135,6 +135,7 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
         """
         Handles the HTTP POST created by pressing the emergency button
         """
+        print("POSTED FROM BUTTON");
         # Get current date and last date the button was pressed
         current_date = timezone.now()
         last_used = self.request.user.eButton_date
@@ -155,7 +156,7 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
             )
 
         # The button IS allowed to be pressed
-        if button_allowed and 'emergencybtn' in self.request.POST:
+        if button_allowed and 'emergencybtn' in request.POST:
             print("emergency emails being sent")
             #self.send_contact_emails(request)
 

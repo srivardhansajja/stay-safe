@@ -14,6 +14,7 @@
 <script type="text/javascript">
 /* Determine (from views.py) if the button can be pressed */
 var allow = '{{ button_allowed | safe }}';
+var button = document.getElementsByName('emergencybtn');
 
 /* JQuery: Disable the button if it was clicked */
 function toggle(button) {
@@ -21,16 +22,19 @@ function toggle(button) {
     if (allow == 'true')
     {
         button.textContent = "Contacts Notified!";
-        console.log("js has the button on", allow);
+        console.log("JS -- ALLOW -- TRUE");
+        button.disabled = true;
+        window.localStorage.setItem("allowed", "true");
     }
 
     /* Button Disabled */
     if (allow == 'false')
     { 
         button.textContent = "Unavailable for 24 hours";
-        console.log("js has the button off", allow);
+        button.disabled = true;
+        console.log("JS -- ALLOW -- FALSE");
+        window.localStorage.setItem("allowed", "false");
     }
-    button.disabled = true;
 };
 </script>
 
