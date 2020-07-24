@@ -10,55 +10,6 @@
 {% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-/* JQuery */
-jQuery(document).ready(function($) {
-    var allow = '{{ button_allowed | safe }}';
-    console.log("page is reloaded; inside ready function")
-    console.log("allow is", allow);
-
-    /* Enable the button if it can be pressed */
-    if (allow == 'true')
-    {
-        console.log("shouldn't be here if allow is false")
-        localStorage.clear();
-        enableButton();
-
-        /* Button was pressed */
-        $('#emergencybtn').click(function() {
-
-            /* Set button state to disabled */
-            setTimeout(function() {
-                localStorage.setItem('emergencybtn.disabled', 1)
-            }, 100);
-
-            /* Disable the button if it's not already disabled */
-            localStorage.getItem('emergencybtn.disabled') && disableButton()
-            });
-    }
-    /* Disable the button if it was already pressed */
-    if (allow == 'false' || localStorage.getItem('emergencybtn.disabled'))
-    {
-        console.log("should be here IF ALLOW IS FALSE")
-        disableButton();
-        return;
-    }
-
-
-
-
-
-    /* Disable the button */
-    function disableButton() {
-        $('#emergencybtn').prop('disabled', true);
-    };
-    /* Enable the button */
-    function enableButton() {
-        $('#emergencybtn').prop('disabled', false);
-    };
-});
-</script>
-
     <!-- User is logged on -->
     {% if user.is_authenticated %}
     <br><h1>Welcome, {{ user.first_name }}!</h1><br>
@@ -108,4 +59,46 @@ jQuery(document).ready(function($) {
         </h7>
         
     {% endif %}
+    <script type="text/javascript">
+    /* JQuery */
+    jQuery(document).ready(function($) {
+        var allow = '{{ button_allowed | safe }}';
+        console.log("page is reloaded; inside ready function")
+        console.log("allow is", allow);
+    
+        /* Enable the button if it can be pressed */
+        if (allow == 'true')
+        {
+            console.log("shouldn't be here if allow is false")
+            localStorage.clear();
+            enableButton();
+    
+            /* Button was pressed */
+            $('#emergencybtn').click(function() {
+                /* Set button state to disabled */
+                setTimeout(function() {
+                    localStorage.setItem('emergencybtn.disabled', 1)
+                }, 100);
+                localStorage.getItem('emergencybtn.disabled') && disableButton()
+                });
+        }
+        /* Disable the button if it was already pressed */
+        if (allow == 'false' || localStorage.getItem('emergencybtn.disabled'))
+        {
+            console.log("should be here IF ALLOW IS FALSE")
+            disableButton();
+        }
+    
+        /* Disable the button */
+        function disableButton() {
+            $('#emergencybtn').prop('disabled', true);
+            $('#emergencybtn').html("Emergency Contacts Notified");
+        };
+        /* Enable the button */
+        function enableButton() {
+            $('#emergencybtn').prop('disabled', false);
+            $('#emergencybtn').html("Emergency");
+        };
+    });
+    </script>
 {% endblock %}
