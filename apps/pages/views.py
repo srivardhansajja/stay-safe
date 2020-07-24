@@ -22,6 +22,25 @@ import json
 #  Render the homepage
 class HomePageView(TemplateView):
     template_name = 'home.html'
+    
+    def get(self, request, *args, **kwargs):
+        current_date = timezone.now()
+        last_used = self.request.user.eButton_date
+    
+        # Determine whether the button can be pressed
+        button_allowed = last_used < (current_date - timedelta(minutes=1))
+        js_button_allowed = json.dumps(button_allowed)
+
+        # Notify the javascript if the button is allowed
+        print("IN UPDATE_EMERGENCY_BUTTON -- ALLOW:", button_allowed)
+        return render(
+            self.request,
+            "home.html", 
+            context={
+                "button_allowed": js_button_allowed
+            },
+        )
+
 
 
 # Render the page to View Trips
@@ -147,13 +166,7 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
         # The button IS NOT allowed to be pressed
         if not button_allowed:
             print("BUTTON NOT ALLOWED:", button_allowed)
-            return render(
-                self.request,
-                "home.html", 
-                context={
-                    "button_allowed": js_button_allowed
-                }
-            )
+            return redirect('home')
 
         # The button IS allowed to be pressed
         if button_allowed and 'emergencybtn' in request.POST:
@@ -170,7 +183,7 @@ class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):
                 "home.html", 
                 context={
                     "button_allowed": js_button_allowed
-                }
+                },
             )
 
     def send_contact_emails(self, request):

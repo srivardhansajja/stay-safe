@@ -10,32 +10,53 @@
 {% endblock %}
 
 {% block content %}
-
 <script type="text/javascript">
-/* Determine (from views.py) if the button can be pressed */
-var allow = '{{ button_allowed | safe }}';
-var button = document.getElementsByName('emergencybtn');
+/* JQuery */
+jQuery(document).ready(function($) {
+    var allow = '{{ button_allowed | safe }}';
+    console.log("page is reloaded; inside ready function")
+    console.log("allow is", allow);
 
-/* JQuery: Disable the button if it was clicked */
-function toggle(button) {
-    /* Button Enabled */
+    /* Enable the button if it can be pressed */
     if (allow == 'true')
     {
-        button.textContent = "Contacts Notified!";
-        console.log("JS -- ALLOW -- TRUE");
-        button.disabled = true;
-        window.localStorage.setItem("allowed", "true");
+        console.log("shouldn't be here if allow is false")
+        localStorage.clear();
+        enableButton();
+
+        /* Button was pressed */
+        $('#emergencybtn').click(function() {
+
+            /* Set button state to disabled */
+            setTimeout(function() {
+                localStorage.setItem('emergencybtn.disabled', 1)
+            }, 100);
+
+            /* Disable the button if it's not already disabled */
+            localStorage.getItem('emergencybtn.disabled') && disableButton()
+            });
+    }
+    /* Disable the button if it was already pressed */
+    if (allow == 'false' || localStorage.getItem('emergencybtn.disabled'))
+    {
+        console.log("should be here IF ALLOW IS FALSE")
+        disableButton();
+        return;
     }
 
-    /* Button Disabled */
-    if (allow == 'false')
-    { 
-        button.textContent = "Unavailable for 24 hours";
-        button.disabled = true;
-        console.log("JS -- ALLOW -- FALSE");
-        window.localStorage.setItem("allowed", "false");
-    }
-};
+
+
+
+
+    /* Disable the button */
+    function disableButton() {
+        $('#emergencybtn').prop('disabled', true);
+    };
+    /* Enable the button */
+    function enableButton() {
+        $('#emergencybtn').prop('disabled', false);
+    };
+});
 </script>
 
     <!-- User is logged on -->
@@ -64,7 +85,7 @@ function toggle(button) {
                 <!-- Emergency Button -->
                 <form method="POST" action="{% url 'emergency_mode' %}">
                     {% csrf_token %}
-                    <button class="btn btn btn-danger btn-md" name="emergencybtn" onclick="toggle(this)">
+                    <button class="btn btn btn-danger btn-md" name="emergencybtn" id="emergencybtn">
                         Emergency
                     </button>
                 </form>
