@@ -27,19 +27,22 @@ class HomePageView(TemplateView):
         Send the emergency button's state to the javascript when the
         home page is refreshed.
         """
-        current_date = timezone.now()
-        last_used = self.request.user.eButton_date
-        button_allowed = last_used < (current_date - timedelta(minutes=3))
-        js_button_allowed = json.dumps(button_allowed)
+        if (request.user.is_authenticated):
+            current_date = timezone.now()
+            last_used = self.request.user.eButton_date
+            button_allowed = last_used < (current_date - timedelta(minutes=3))
+            js_button_allowed = json.dumps(button_allowed)
 
-        # Send the emergency button's state to the javascript
-        return render(
-            self.request,
-            "home.html",
-            context={
-                "button_allowed": js_button_allowed
-            },
-        )
+            # Send the emergency button's state to the javascript
+            return render(
+                self.request,
+                "home.html",
+                context={
+                    "button_allowed": js_button_allowed
+                },
+            )
+        # Render the welcome page for un-authenticated users
+        return render(request, 'home.html')
 
 # Render the page to View Trips
 class TripPageView(LoginRequiredMixin, ListView):
