@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
 
+
 # Create custom accounts for the database
 class CustomAccount(AbstractUser):
     """Set custom user account fields"""

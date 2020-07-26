@@ -1,4 +1,6 @@
 # apps/pages/views.py
+import json
+from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -8,36 +10,32 @@ from django.utils import timezone
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from datetime import timedelta
+from django.shortcuts import redirect
+from django.core.mail import send_mail
+from django.shortcuts import render
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
-from django.shortcuts import redirect
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.shortcuts import render
-import json
 
 
 #  Render the homepage
 class HomePageView(TemplateView):
     template_name = 'home.html'
-    
-    # Save Emergency button state when the home page is refreshed
+
     def get(self, request, *args, **kwargs):
-        print("GET called in HomePageView")
+        """
+        Send the emergency button's state to the javascript when the
+        home page is refreshed.
+        """
         current_date = timezone.now()
         last_used = self.request.user.eButton_date
-    
-        # Determine whether the button can be pressed
-        button_allowed = last_used < (current_date - timedelta(minutes=1))
+        button_allowed = last_used < (current_date - timedelta(minutes=3))
         js_button_allowed = json.dumps(button_allowed)
 
-        # Notify javascript with the emergency button state
-        print("IN UPDATE_EMERGENCY_BUTTON (HomePageView) -- ALLOW:", button_allowed)
+        # Send the emergency button's state to the javascript
         return render(
             self.request,
-            "home.html", 
+            "home.html",
             context={
                 "button_allowed": js_button_allowed
             },
@@ -152,39 +150,27 @@ class TripMarkCompleteView(LoginRequiredMixin, UpdateView):
 class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):            
     def post(self, request, *args, **kwargs):
         """
-        Handles the HTTP POST created by pressing the emergency button
+        Handles the HTTP POST when pressing the emergency button
         """
-        print("POSTED FROM BUTTON");
-        # Get current date and last date the button was pressed
         current_date = timezone.now()
         last_used = self.request.user.eButton_date
         
         # Determine whether the button can be pressed
-        button_allowed = last_used < (current_date - timedelta(minutes=1))
-        js_button_allowed = json.dumps(button_allowed)
+        button_allowed = last_used < (current_date - timedelta(minutes=3))
 
-        # The button IS allowed to be pressed
+        # If the emergency button is pressed:
+        # (1) Send emails to emergency contacts
+        # (2) Update the date the button was pressed in the database
         if button_allowed and 'emergencybtn' in request.POST:
-            print("emergency emails being sent")
-            #self.send_contact_emails(request)
-
-            # Update when the user pressed the button in the db
+            self.send_contact_emails(request)
             self.request.user.eButton_date = timezone.now()
             self.request.user.save()
-
-            # Notify javascript with the emergency button state
-            return HomePageView.get(self, self.request)
-
-        # The button IS NOT allowed to be pressed
-        else:
-            if not button_allowed:
-                print("BUTTON NOT ALLOWED:", button_allowed)
-                return redirect('home')
+            return HomePageView.get(self, request)
+        return redirect('home')
 
     def send_contact_emails(self, request):
         """
-        A method that sends an emergency email to all of the user's
-        emergency contacts.
+        Send an emergency email to all of the emergency contacts.
         """
         # Define email fields
         name_list = [
