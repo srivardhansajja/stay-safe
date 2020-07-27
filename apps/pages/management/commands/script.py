@@ -1,9 +1,6 @@
 # pages/management/commands/script.py
 from django.core.management.base import BaseCommand
-from datetime import timedelta
-from django.utils import timezone
-from django.core.mail import send_mail
-from apps.pages.models import TripStatusList_, Trip, EmergencyContact
+from apps.pages.models import Trip
 
 
 class Command(BaseCommand):

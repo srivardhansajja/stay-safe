@@ -5,17 +5,20 @@
     Home
 {% endblock %}
 
-{% block content %}
+{% block extrajs %}
+    <script>console.log("script on the outside");</script>
+{% endblock %}
 
+{% block content %}
     <!-- User is logged on -->
     {% if user.is_authenticated %}
     <br><h1>Welcome, {{ user.first_name }}!</h1><br>
         
-        <!-- Create a trip -->
-        <form id="trip_options" class="form-inline ml-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10">
+    <!-- Trips, Emergency Contacts, Emergency button -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-inline float-left">
+                <form id="trip_options" class="form-inline ml-auto">
 
                     <!-- View trips -->
                     <a href="{% url 'trip_list' %}" class="btn btn-info btn-md mr-1" \
@@ -28,25 +31,19 @@
                         role="button" aria-pressed="true">
                         Emergency contacts
                     </a> 
-        
-        
-                </div>
-                <div class="col-md-2">
-                    <!-- Emergency! -->
-                    <!-- <a href="" class="btn btn btn-danger btn-md float-right pull-right mr-1" \
-                        role="button" aria-pressed="true">
+                </form>
+
+                <!-- Emergency Button -->
+                <form method="POST" action="{% url 'emergency_mode' %}">
+                    {% csrf_token %}
+                    <button class="btn btn btn-danger btn-md" name="emergencybtn" id="emergencybtn">
                         Emergency
-                    </a>  -->
-                    <form method="POST" action="{% url 'emergency_mode' %}">
-                        {% csrf_token %}
-                        <button class="btn btn btn-danger btn-md float-right pull-right mr-1" name="emergencybtn">Emergency</button>
-                    </form>
-                </div>
+                    </button>
+                </form>
             </div>
         </div>
-            
-        </form>
-
+    </div>  
+    
     <!-- User is logged out -->
     {% else %}
         <br><b><h1>Welcome to Stay Safe!</h1></b>
@@ -62,4 +59,43 @@
         </h7>
         
     {% endif %}
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        /* Check if the emergency button can be pressed */
+        var allow = '{{ button_allowed | safe }}';
+    
+        /* Enable the emergency button */
+        if (allow == 'true')
+        {
+            localStorage.clear();
+            enableButton();
+    
+            /* Button was pressed */
+            $('#emergencybtn').click(function() {
+                setTimeout(function() {
+                    localStorage.setItem('emergencybtn.disabled', 1)
+                }, 10);
+                localStorage.getItem('emergencybtn.disabled') && disableButton();
+                });
+        }
+
+        /* Disable the emergency button */
+        if (allow == 'false' || localStorage.getItem('emergencybtn.disabled'))
+        {
+            disableButton();
+        }
+    
+        /* Helper function: disable the button */
+        function disableButton() {
+            $('#emergencybtn').prop('disabled', true);
+            $('#emergencybtn').html("Emergency Contacts Notified");
+        };
+        
+        /* Helper function: enable the button */
+        function enableButton() {
+            $('#emergencybtn').prop('disabled', false);
+            $('#emergencybtn').html("Emergency");
+        };
+    });
+    </script>
 {% endblock %}

@@ -1,4 +1,6 @@
 # apps/pages/views.py
+import json
+from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -6,18 +8,41 @@ from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
-from datetime import timedelta
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.shortcuts import redirect
+from django.core.mail import send_mail
+from django.shortcuts import render
 from .forms import TripCreateForm, TripUpdateForm
 from .forms import EmergencyContactForm, EmergencyContactUpdateForm
 from .models import Trip, EmergencyContact, TripStatusList_
-from django.db.models import F
-from django.shortcuts import render, redirect,get_object_or_404
 
 
 #  Render the homepage
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
+    def get(self, request, *args, **kwargs):
+        """
+        Send the emergency button's state to the javascript when the
+        home page is refreshed.
+        """
+        if (request.user.is_authenticated):
+            current_date = timezone.now()
+            last_used = self.request.user.eButton_date
+            button_allowed = last_used < (current_date - timedelta(minutes=3))
+            js_button_allowed = json.dumps(button_allowed)
+
+            # Send the emergency button's state to the javascript
+            return render(
+                self.request,
+                "home.html",
+                context={
+                    "button_allowed": js_button_allowed
+                },
+            )
+        # Render the welcome page for un-authenticated users
+        return render(request, 'home.html')
 
 # Render the page to View Trips
 class TripPageView(LoginRequiredMixin, ListView):
@@ -77,7 +102,6 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.YTS.value
                 )
-            
             if key == 'awaiting_response':
                 trips_set.update(
                     trip_status=TripStatusList_.AR.value
@@ -87,7 +111,6 @@ class TripPageView(LoginRequiredMixin, ListView):
                 trips_set.update(
                     trip_status=TripStatusList_.CP.value
                 )
-
         return queryset
 
 
@@ -116,18 +139,72 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'trip_delete.html'
     success_url = reverse_lazy('trip_list')
 
-def mark_complete(request, pk):
-    if 'markcompletebtn' in request.POST:
-        trip_ = Trip.objects.filter(pk=pk)[0]
-        trip_.response_sent = True
-        trip_.save()
-        return redirect('trip_list')
-    return HttpResponse('Error! Please try again')
 
-def emergency_mode(request):
-    if 'emergencybtn' in request.POST:
+class TripMarkCompleteView(LoginRequiredMixin, UpdateView):
+    def post(self, request, pk):
+        if 'markcompletebtn' in request.POST:
+            trip_ = Trip.objects.filter(pk=pk)[0]
+            trip_.response_sent = True
+            trip_.save()
+            return redirect('trip_list')
+        return HttpResponse('Error! Please try again')
+
+
+class EmergencyButtonHomeView(LoginRequiredMixin, UpdateView):            
+    def post(self, request, *args, **kwargs):
+        """
+        Handles the HTTP POST when pressing the emergency button
+        """
+        current_date = timezone.now()
+        last_used = self.request.user.eButton_date
+        
+        # Determine whether the button can be pressed
+        button_allowed = last_used < (current_date - timedelta(minutes=3))
+
+        # If the emergency button is pressed:
+        # (1) Send emails to emergency contacts
+        # (2) Update the date the button was pressed in the database
+        if button_allowed and 'emergencybtn' in request.POST:
+            self.send_contact_emails(request)
+            self.request.user.eButton_date = timezone.now()
+            self.request.user.save()
+            return HomePageView.get(self, request)
         return redirect('home')
-    return HttpResponse('Error! Please try again')
+
+    def send_contact_emails(self, request):
+        """
+        Send an emergency email to all of the emergency contacts.
+        """
+        # Define email fields
+        name_list = [
+            c.first_name for c in EmergencyContact.objects.filter(
+                user=self.request.user
+            )
+        ]
+        email_list = [
+            c.email for c in EmergencyContact.objects.filter(
+                user=self.request.user
+            )
+        ]
+        sender = 'staysafe3308@gmail.com'
+        subject = f'EMERGENCY: Contact {self.request.user.first_name}'\
+                  f' {self.request.user.last_name}'
+
+        # Send an email to each emergency contact
+        for contact_name, contact_email in zip(name_list, email_list):
+            HTML_message = render_to_string(
+                'emergency_email.html',
+                {
+                    'contact_name': contact_name,
+                    'first_name': self.request.user.first_name,
+                    'last_name': self.request.user.last_name,
+                    'email': self.request.user.email,
+                }
+            )
+            message = strip_tags(HTML_message)
+            send_mail(subject, message, sender, [contact_email],
+                      html_message=HTML_message)
+
 
 class EmergencyContactCreateView(LoginRequiredMixin, CreateView):
     model = EmergencyContact

@@ -5,6 +5,8 @@ from enum import Enum
 from datetime import timedelta
 from django.utils import timezone
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 # Class representing Trip Status, subclass of Enum
@@ -65,80 +67,61 @@ class Trip(models.Model):
         Send an email to the trip owner when a trip is 'Awaiting response'.
         """
         # Define email fields
-        n = '\n\n'
         sender = 'staysafe3308@gmail.com'
         subject = f'Awaiting response for trip to: {self.trip_location}!'
         emergency_contact_date = (self.trip_end + timedelta(hours=1)).strftime(
             '%l:%m%p on %b %d, %Y'
         )
-
         # Send an email notifying the user that a trip is awaiting response
-        message = \
-            f'Hello {self.trip_owner.first_name} {self.trip_owner.last_name},{n}' \
-                f'Your trip to {self.trip_location} is awaiting your response.{n}' \
-                f'If you do not mark this trip as complete, then your emergency ' \
-                f'contacts will be notified at: {emergency_contact_date} {n}' \
-                f'{n}' \
-                f'-The Stay Safe Team'
-        send_mail(subject, message, sender, [self.trip_owner.email])
+        HTML_message = render_to_string(
+            'notification_email.html',
+            {
+                'first_name': self.trip_owner.first_name,
+                'last_name': self.trip_owner.last_name,
+                'trip_location': self.trip_location,
+                'contact_date': emergency_contact_date,
+            }
+        )
+        message = strip_tags(HTML_message)
+        send_mail(subject, message, sender, [self.trip_owner.email],
+                  html_message=HTML_message)
 
     def send_contact_emails(self):
         """
         Send an email to all of the trip owner's emergency contacts.
         """
         # Define email fields
-        n = '\n\n'
         name_list = [
-            c.first_name for c in EmergencyContact.objects.filter(user=self.trip_owner)
+            c.first_name for c in EmergencyContact.objects.filter(
+                user=self.trip_owner
+            )
         ]
         email_list = [
-            c.email for c in EmergencyContact.objects.filter(user=self.trip_owner)
+            c.email for c in EmergencyContact.objects.filter(
+                user=self.trip_owner
+            )
         ]
         end_date = self.trip_end.strftime('%l:%m%p on %b %d, %Y')
         sender = 'staysafe3308@gmail.com'
-        subject = f'{self.trip_owner.first_name} {self.trip_owner.last_name}\'s trip ended!'
+        subject = f'{self.trip_owner.first_name} {self.trip_owner.last_name}'\
+                  f'\'s trip ended!'
 
         # Send an email to each emergency contact
         for contact_name, contact_email in zip(name_list, email_list):
-            message = \
-                f'Hello {contact_name},{n}' \
-                    f'{self.trip_owner.first_name} {self.trip_owner.last_name}\'s trip to ' \
-                    f'{self.trip_location} ended 1 hour ago at {end_date}.{n}' \
-                    f'If you have not heard from them yet, consider contacting' \
-                    f' them to make sure they are safe.{n}' \
-                    f'Their email address is: {self.trip_owner.email}' \
-                    f'{n}' \
-                    f'-The Stay Safe Team'
-            send_mail(subject, message, sender, [contact_email])
-
-    def send_emergency_emails(self):
-        """
-        Send an emergency email to all of the trip owner's emergency contacts.
-        """
-        # Define email fields
-        n = '\n\n'
-        name_list = [
-            c.first_name for c in EmergencyContact.objects.filter(user=self.trip_owner)
-        ]
-        email_list = [
-            c.email for c in EmergencyContact.objects.filter(user=self.trip_owner)
-        ]
-        end_date = self.trip_end.strftime('%l:%m%p on %b %d, %Y')
-        sender = 'staysafe3308@gmail.com'
-        subject = f'{self.trip_owner.first_name} {self.trip_owner.last_name}\'s has triggered the emergency protocol!'
-
-        # Send an email to each emergency contact
-        for contact_name, contact_email in zip(name_list, email_list):
-            message = \
-                f'Hello {contact_name},{n}' \
-                    f'{self.trip_owner.first_name} {self.trip_owner.last_name}\' has' \
-                    f'triggered the emergency protocol.{n}' \
-                    f'If you have not heard from them, consider contacting' \
-                    f' them to make sure they are safe.{n}' \
-                    f'Their email address is: {self.trip_owner.email}' \
-                    f'{n}' \
-                    f'-The Stay Safe Team'
-            send_mail(subject, message, sender, [contact_email])
+            HTML_message = render_to_string(
+                'contact_email.html',
+                {
+                    'contact': contact_name,
+                    'first_name': self.trip_owner.first_name,
+                    'last_name': self.trip_owner.last_name,
+                    'trip_location': self.trip_location,
+                    'end_date': end_date,
+                    'email': self.trip_owner.email,
+                }
+            )
+            message = strip_tags(HTML_message)
+            send_mail(subject, message, sender, [contact_email],
+                      html_message=HTML_message)
 
     def __str__(self):
         return self.trip_name

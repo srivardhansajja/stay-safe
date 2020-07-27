@@ -1,0 +1,15 @@
+<!-- templates/contact_email.html -->
+
+<!-- Extend the base email template -->
+{% extends '_base_email.html' %}
+
+<!-- Emergency contacts email message -->
+{% block content %}
+    <p>Hello {{ contact }},</p>
+    <p>{{ first_name }} {{ last_name }}'s trip to {{ trip_location }} ended 1 hour ago 
+        at {{ end_date }}.</p>
+    <p>If you have not heard from them yet, consider contacting them to make sure they are safe</p>
+    <p>Their email address is: {{ email }}</p>
+    <br>
+    <p>-The Stay Safe Team</p>
+{% endblock %}

@@ -34,12 +34,15 @@ urlpatterns = [
          name='trip_delete'
          ),
 
+    # Trip mark as complete
     path('trips/<int:pk>/mark_complete',
-         views.mark_complete,
+         views.TripMarkCompleteView.as_view(),
          name='mark_complete'
          ),
+
+    # Emergency button pressed
     path('trips/emergency_mode',
-         views.emergency_mode,
+         views.EmergencyButtonHomeView.as_view(),
          name='emergency_mode'
          ),
 

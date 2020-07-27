@@ -1,0 +1,14 @@
+<!-- templates/notification_email.html -->
+
+<!-- Extend the base email template -->
+{% extends '_base_email.html' %}
+
+<!-- Notification email message -->
+{% block content %}
+    <p>Hello {{ first_name }} {{ last_name }},</p>
+    <p>Your trip to {{ trip_location }} is awaiting your response.</p>
+    <p>If you do not mark this trip as complete, then your emergency contacts will 
+        be notified at {{ contact_date }}</p>
+    <br>
+    <p>-The Stay Safe Team</p>
+{% endblock %}
