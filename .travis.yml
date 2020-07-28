@@ -12,6 +12,8 @@ install:
 # Run test suite
 script:
   - python manage.py makemigrations
+  - python manage.py makemigrations pages
+  - python manage.py makemigrations accounts
   - python manage.py migrate
   - python manage.py collectstatic
   - python manage.py test
