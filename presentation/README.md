@@ -21,8 +21,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
    - **Thomas Dolan:** 10/10
      - Awesome tool.  I liked that it has project management aspects to it, like assigning issues.
    - **Srivardhan Sajja:** 10/10
-     - This was the most extensively used tool by the team, was critical for collaborating, and assimilating code 
-     - written by different team members.
+     - This was the most extensively used tool by the team, was critical for collaborating, and assimilating code written by different team members.
 
 
 2. **Trello:** Task management
@@ -32,8 +31,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
      - Good tool for keeping the project moving forward.  I wish we had used it a bit more, but we really only had
      - three sprints and a couple spikes, so we didn't spend a whole lot of time using it.
    - **Srivardhan Sajja:** 3/10
-     - Was useful in the initial stages of the project, but usage slowed down as reliance on GitHub for issue
-     - tracking rose.
+     - Was useful in the initial stages of the project, but usage slowed down as reliance on GitHub for issue tracking rose.
 
 
 3. **Zoom:** Meetings and pair programming sessions
@@ -42,8 +40,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
    - **Thomas Dolan:** 7/10
      - I agree with Tom; it worked well for our team but in-person would have been better.
    - **Srivardhan Sajja:** 7/10
-     - In simple terms, Zoom ensured that we did not do poorly, but we could have done better if we had 
-     - in-person meetings.
+     - In simple terms, Zoom ensured that we did not do poorly, but we could have done better if we had in-person meetings.
 
 
 4. **Slack:** Team member check-in's and updates
@@ -52,8 +49,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
    - **Thomas Dolan:** 10/10
      - Great for communication and I loved the fact that you could install additional apps.  Way better than email.
    - **Srivardhan Sajja:** 10/10
-     - Second most extensively used tool after GitHub for collaboration. Ideas and communication was separated into
-     - channels which boosted productivity and helped avoid information overload.
+     - Second most extensively used tool after GitHub for collaboration. Ideas and communication was separated into channels which boosted productivity and helped avoid information overload.
 
 
 5. **Scrum:** Agile development framework
@@ -62,8 +58,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
    - **Thomas Dolan:** 7/10
      - The framework really helped us focus on only what was important at the time.  Helped prevent "bikeshedding".
    - **Srivardhan Sajja:** 7/10
-     - Helped streamline the development process and made sure that development was on track in terms of time and 
-     - features developed
+     - Helped streamline the development process and made sure that development was on track in terms of time and features developed
 
 
 6. **Django:** Web development framework
@@ -98,8 +93,7 @@ Each team member's rating and commentary on the usefulness of each tool used in 
    - **Thomas Dolan:** 10/10
      - I literally dropped a one-liner in the settings.py file and add a couple files and the codebase was deployment-ready.  That's efficiency!
    - **Srivardhan Sajja:** 10/10
-     - My original expectation was that one would have to set up a bunch of settings and configurations, but using Heroku made me realize what a truly 
-     - efficient and user-friendly tool it was.
+     - My original expectation was that one would have to set up a bunch of settings and configurations, but using Heroku made me realize what a truly efficient and user-friendly tool it was.
 
 
 10. **Code Editors:** Vim, VSCode, PyCharm
