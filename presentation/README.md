@@ -127,5 +127,13 @@ Each team member's rating and commentary on the usefulness of each tool used in 
       - I had only ever used git for personal projects (not team based).  I had to learn a ton of new commands so that I could work with the team. 
       - Stackoverflow was a useful resource for this.  I still don't have a great understanding of exactly what some of the commands did (ie. cherrypicking?) but at least now I know how to solve some common issues.
       
+  - **Srivardhan Sajja:**
+    - **Issues with Django**
+      - For this class, I had to learn Django from scratch. It was a very robust tool with many built-in features which meant it will be complicated to learn. Terms like models, views, templates, migrations, createsuperuser took a while for me to use in normal conversations with teammates.
+      - To overcome this challenge, I went through the Django documentation thoroughly, and scrolled through the code of small but popular django projects. The lab on Flask, and pair programming with teammates also helped.
+    - **Collaboration and Git**
+      - Collaboration in terms of project management and coding was initially a challenge for me, as I found it quite difficult initially to code specific portions while keeping in mind that it has to work well with the code written by others.
+      - GitHub and Trello did a lot of work in helping streamline the development process. Once the team got familiar with the various Git commands, this obstacle was surpassed, and efficient collaboration was in place.
+      
 # Project Demo:
   - Create a 5 minute demo video?
