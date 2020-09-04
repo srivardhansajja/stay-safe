@@ -39,7 +39,7 @@ We use [Scrum](https://www.scrum.org/) as our agile software development method.
 We use [Trello](https://www.trello.com/) to organize our workflow and [GitHub](https://www.github.com/) for version control.
 
 ## Team Members
-* Thomas Dolan
-* Kyler Sloan
-* Thomas Cochran
 * Srivardhan Sajja
+* Thomas Dolan
+* Thomas Cochran
+
