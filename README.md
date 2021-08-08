@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.com/tjdolan121/3308_App.svg?branch=master)](https://travis-ci.com/tjdolan121/3308_App)
 
-## Vision Statement
-
 Everyone knows they should notify a friend or family member about their trip plans in case of an emergency. But this can often be easy to forget or burdensome. 'Stay Safe' allows you to automatically notify an emergency contact if you have not returned from your trip safely. Simply open the app and enter the start and end dates of your trip. At the end of your trip, 'Stay Safe' checks if you have returned safely. If no response is heard, 'Stay Safe' will notify your emergency contacts with your trip details. 
 
 ## Motivation
