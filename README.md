@@ -8,6 +8,13 @@ Everyone knows they should notify a friend or family member about their trip pla
 
 We are motivated to create an application that will protect the safety of others. 'Stay Safe' allows the user to request help when they may be otherwise incapable of doing so.
 
+## Technology Stack
+
+- Django
+- JavaScript
+- SQLite
+- HTML / CSS
+
 ## Development Methods
 
 We use [Scrum](https://www.scrum.org/) as our agile software development method.
